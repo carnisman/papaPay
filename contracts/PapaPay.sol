@@ -34,6 +34,7 @@ contract PapaPay {
   }
 
   event CourseCreated (uint papaCourse);
+  event CourseDeposit (uint papaCourse);
 
   constructor() public {
   }
@@ -55,11 +56,11 @@ contract PapaPay {
   }
 
   // Student approves that contract, the total cost of the course is deducted from student wallet and stored on the contract
-  // Pensar requires: papaStudent=msg.sender, papaBalance=0
+  // Pensar requires: papaStudent=msg.sender, papaBalance=0, msg.value=papaPrice
   function papaApprove(address _student, uint _papaCourse) public payable {
-
-	
-
+    require(msg.value = papas[_papaCourse].papaPrice;
+    papas[_papaCourse].papaBalance += msg.value;
+    emit CourseDeposit;
   }
 
   function papaView(address _anyaddress) public view {
