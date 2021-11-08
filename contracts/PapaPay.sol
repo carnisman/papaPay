@@ -129,7 +129,8 @@ contract PapaPay is ReentrancyGuard {
   }
 
   function papaWithdrawn(uint _papaCourse) 
-  external 
+  external
+  payable
   {
     require(!locked, "Reentrant call detected!");
     require (msg.sender == papas[_papaCourse].papaTutor);
