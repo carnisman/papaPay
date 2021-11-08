@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity >=0.6 <0.9.0;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+//import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract PapaPay is ReentrancyGuard {
   
-  using ECDSA for bytes32;
+  //using ECDSA for bytes32;
 
   uint public papaCount;
 
-  mapping (uint => Papa) public papas;
+  mapping (uint => Papa) private papas;
 
   bool locked = false;
 
@@ -30,8 +30,8 @@ contract PapaPay is ReentrancyGuard {
     // Balance of Course
     uint papaBalance;
     // Teacher and student addresses
-    address payable papaTutor;
-    address payable papaStudent;
+    address papaTutor;
+    address papaStudent;
   }
 
 //
@@ -39,7 +39,7 @@ contract PapaPay is ReentrancyGuard {
 //
 
   event CourseCreated (uint papaCourse);
-  event CourseDeposit (uint papaCourse);
+  event CourseDeposit (uint papaCourse, uint papaBalance);
 
 //
 //    MODIFIERS
@@ -61,36 +61,40 @@ contract PapaPay is ReentrancyGuard {
       _;
   }
 
-  constructor() public {
+  constructor()  {
   }
 
 	// Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
-  function papaCreate( uint _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) public returns (bool) {
-    papas[papaCourse] = Papa({
-      papaDesc: _papaDesc,
-      papaCourse: papaCount,
-      papaPrice: _price,
-      papaLessons: _papaLessons,
-      papaLock: _papaLock,
-      papaTutor: msg.sender,
-      papaStudent: _papaStudent
-       });
-    emit CourseCreated(papaCount);
-    papaCount = papaCount +1;
-    return true;
-  }
+  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
+    public 
+    returns (bool) 
+    {
+      papas[papaCount] = Papa({
+        papaDesc: _papaDesc,
+        papaCourse: papaCount,
+        papaPrice: _papaPrice,
+        papaBalance: 0,
+        papaLessons: _papaLessons,
+        papaLock: _papaLock,
+        papaTutor: msg.sender,
+        papaStudent: _papaStudent
+        });
+      emit CourseCreated(papaCount);
+      papaCount = papaCount +1;
+      return true;
+    }
 
   // Student approves that contract, the total cost of the course is deducted from student wallet and stored on the contract
   // Pensar requires: msg.value=papaPrice
-  function papaApprove(address _student, uint _papaCourse) 
-    public 
+  function papaApprove(uint _papaCourse)
+    external
     payable 
     isStudent(_papaCourse) 
     zeroBalance(_papaCourse) 
     exactBalance(_papaCourse)
     {
       papas[_papaCourse].papaBalance += msg.value;
-      emit CourseDeposit;
+      emit CourseDeposit(_papaCourse,msg.value);
     }
 
   function papaView(address _anyaddress) public view {
@@ -99,34 +103,38 @@ contract PapaPay is ReentrancyGuard {
 
   }
 
-  function papaInit(address _tutor, uint _papaCourse) {
-
   // The tutor calls for the start of an individual lesson
+  // requires msg.sender=tutor balance!=0 
+  function papaInit(address _tutor, uint _papaCourse) 
+  external 
+  {
+
+  
 
   }
 
-  function papaAssist(address _student, uint _papaCourse) {
+  function papaAssist(address _student, uint _papaCourse) public {
 
   // The student is giving attendance, making possible a partial withdrawn for the teacher
 
   }
 
-  function papaWithdrawn(address _tutor, uint _papaCourse) {
-    require(!locked, "Reentrant call detected!");
-    locked = true;
-    ...
-    locked = false;
+  function papaWithdrawn(address _tutor, uint _papaCourse) public {
+   // require(!locked, "Reentrant call detected!");
+   // locked = true;
+   // ...
+   // locked = false;
   // The teacher can make withdrawns from here
 
   }
 
-  function papaRecover(address _student, uint _papaCourse) {
+  function papaRecover(address _student, uint _papaCourse) public {
 
   // If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining tokens
 
   }
 
-  function () {
+  fallback () external {
   //  A fallback here
   }
 
