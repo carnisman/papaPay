@@ -29,9 +29,12 @@ contract PapaPay is ReentrancyGuard {
     uint papaLock;
     // Balance of Course
     uint papaBalance;
-    // Teacher and student addresses
+    // Teacher and student addresses and signed assistance
     address papaTutor;
+    uint papaTutorSign;
     address papaStudent;
+    uint papaStudentSign;
+    uint papaWithdrew;
   }
 
 //
@@ -77,7 +80,10 @@ contract PapaPay is ReentrancyGuard {
         papaLessons: _papaLessons,
         papaLock: _papaLock,
         papaTutor: msg.sender,
-        papaStudent: _papaStudent
+        papaTutorSign: 0,
+        papaStudent: _papaStudent,
+        papaStudentSign: 0,
+        papaWithdrew: 0
         });
       emit CourseCreated(papaCount);
       papaCount = papaCount +1;
@@ -104,28 +110,39 @@ contract PapaPay is ReentrancyGuard {
   }
 
   // The tutor calls for the start of an individual lesson
-  // requires msg.sender=tutor balance!=0 
-  function papaInit(address _tutor, uint _papaCourse) 
+  // requires msg.sender=tutor balance!=0 // requires timestamp antes de prox firma
+  function papaInit(uint _papaCourse) 
   external 
   {
-
+    require (msg.sender == papas[_papaCourse].papaTutor);
+    require (papas[_papaCourse].papaTutorSign <= papas[_papaCourse].papaStudentSign);
+    papas[_papaCourse].papaTutorSign += 1;
+  }
   
-
-  }
-
-  function papaAssist(address _student, uint _papaCourse) public {
-
   // The student is giving attendance, making possible a partial withdrawn for the teacher
-
+  function papaAssist(uint _papaCourse) 
+  external 
+  {
+    require (msg.sender == papas[_papaCourse].papaStudent);
+    require (papas[_papaCourse].papaStudentSign <= papas[_papaCourse].papaTutorSign);
+    papas[_papaCourse].papaStudentSign += 1;
   }
 
-  function papaWithdrawn(address _tutor, uint _papaCourse) public {
-   // require(!locked, "Reentrant call detected!");
-   // locked = true;
-   // ...
-   // locked = false;
-  // The teacher can make withdrawns from here
-
+  function papaWithdrawn(uint _papaCourse) 
+  external 
+  {
+    require(!locked, "Reentrant call detected!");
+    require (msg.sender == papas[_papaCourse].papaTutor);
+    require (papas[_papaCourse].papaBalance != 0 && papas[_papaCourse].papaStudentSign != 0 && papas[_papaCourse].papaStudentSign != 0);
+    require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaStudentSign);
+    require (papas[_papaCourse].papaStudentSign != papas[_papaCourse].papaWithdrew);
+    locked = true;
+    papas[_papaCourse].papaWithdrew += 1;
+    uint papaAmount = (papas[_papaCourse].papaBalance) / (papas[_papaCourse].papaLessons - papas[_papaCourse].papaWithdrew + 1);
+    papas[_papaCourse].papaBalance = papas[_papaCourse].papaBalance - papaAmount;
+    (bool sent, ) = msg.sender.call{value: papaAmount}("");
+    require(sent, "Failed to send Ether");
+    locked = false;
   }
 
   function papaRecover(address _student, uint _papaCourse) public {
