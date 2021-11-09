@@ -117,7 +117,7 @@ contract PapaPay is ReentrancyGuard {
     {
       require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaLessons, "All lessons were given");
-      require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn´t sign attendance");
+      require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn't sign attendance");
       papas[_papaCourse].papaTutorSign += 1;
     }
   
@@ -141,8 +141,8 @@ contract PapaPay is ReentrancyGuard {
       //require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign,"You didn´t start your last lesson");
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaWithdrew,"Already withdrawn your last lesson");
       locked = true;
-      papas[_papaCourse].papaWithdrew += 1;
-      uint papaAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaWithdrew -  papas[_papaCourse].papaTutorSign);
+      uint papaAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
+      papas[_papaCourse].papaWithdrew = papas[_papaCourse].papaTutorSign;
       papas[_papaCourse].papaBalance = papas[_papaCourse].papaBalance - papaAmount;
       (bool sent, ) = msg.sender.call{value: papaAmount}("");
       require(sent, "Failed to send Ether");
