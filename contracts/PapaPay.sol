@@ -133,7 +133,6 @@ contract PapaPay is ReentrancyGuard {
 
   function papaWithdraw(uint _papaCourse) 
     external
-    payable
     nonReentrant
     {
       require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
