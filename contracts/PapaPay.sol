@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6 <0.9.0;
 
-//import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract PapaPay is ReentrancyGuard {
-  
-  //using ECDSA for bytes32;
 
   uint public papaCount;
 
   mapping (uint => Papa) private papas;
-
-  bool locked = false;
 
   struct Papa {
           // Short description of the contract 
@@ -32,6 +27,7 @@ contract PapaPay is ReentrancyGuard {
           uint papaTutorSign;
           address papaStudent;
           uint papaStudentSign;
+          // Withdrawn lessons
           uint papaWithdrew;
         }
 
@@ -39,8 +35,10 @@ contract PapaPay is ReentrancyGuard {
 //    EVENTS
 //
 
-  event CourseCreated (uint papaCourse);
+  event CourseCreated (uint papaCourse, string papaDesc);
   event CourseDeposit (uint papaCourse, uint papaBalance);
+  event LessonStarted (uint papaCourse, uint papaTutorSign);
+  event LessonAttended (uint papaCourse, uint papaStudentSign);
 
 //
 //    MODIFIERS
@@ -83,7 +81,7 @@ contract PapaPay is ReentrancyGuard {
         papaStudentSign: 0,
         papaWithdrew: 0
         });
-      emit CourseCreated(papaCount);
+      emit CourseCreated(papaCount,_papaDesc);
       papaCount = papaCount +1;
       return true;
     }
@@ -119,6 +117,7 @@ contract PapaPay is ReentrancyGuard {
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaLessons, "All lessons were given");
       require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn't sign attendance");
       papas[_papaCourse].papaTutorSign += 1;
+      emit LessonStarted(_papaCourse,papas[_papaCourse].papaTutorSign);
     }
   
   // The student is giving attendance, making possible a partial withdrawn for the teacher
@@ -127,26 +126,24 @@ contract PapaPay is ReentrancyGuard {
     {
       require (msg.sender == papas[_papaCourse].papaStudent, "Not a Student");
       require (papas[_papaCourse].papaStudentSign != papas[_papaCourse].papaLessons, "All lessons were taken");
-      require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign, "You already signed attendace");
+      require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign, "You already signed attendace. Lesson not started");
       papas[_papaCourse].papaStudentSign += 1;
+      emit LessonAttended(_papaCourse,papas[_papaCourse].papaStudentSign);
     }
 
   function papaWithdraw(uint _papaCourse) 
     external
     payable
+    nonReentrant
     {
-      require(!locked, "Reentrant call detected!");
       require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
-      require (papas[_papaCourse].papaBalance != 0 && papas[_papaCourse].papaTutorSign != 0,"Check course balance, and Tutor or Student lesson signatures");
-      //require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign,"You didn´t start your last lesson");
+      require (papas[_papaCourse].papaBalance != 0 && papas[_papaCourse].papaTutorSign != 0,"Check course balance or lesson signature");
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaWithdrew,"Already withdrawn your last lesson");
-      locked = true;
       uint papaAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
       papas[_papaCourse].papaWithdrew = papas[_papaCourse].papaTutorSign;
       papas[_papaCourse].papaBalance = papas[_papaCourse].papaBalance - papaAmount;
       (bool sent, ) = msg.sender.call{value: papaAmount}("");
       require(sent, "Failed to send Ether");
-      locked = false;
     }
 
   function papaRecover(address _student, uint _papaCourse) public {
