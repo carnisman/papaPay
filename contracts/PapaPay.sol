@@ -31,18 +31,18 @@ contract PapaPay is ReentrancyGuard {
           uint papaWithdrew;
         }
 
-//
-//    EVENTS
-//
+///
+///    EVENTS
+///
 
   event CourseCreated (uint papaCourse, string papaDesc);
   event CourseDeposit (uint papaCourse, uint papaBalance);
   event LessonStarted (uint papaCourse, uint papaTutorSign);
   event LessonAttended (uint papaCourse, uint papaStudentSign);
 
-//
-//    MODIFIERS
-//
+///
+///    MODIFIERS
+///
 
 
   modifier isStudent(uint _papaCourse) {
@@ -63,7 +63,7 @@ contract PapaPay is ReentrancyGuard {
   constructor()  {
   }
 
-	// Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
+/// Anyone who call this function will be a Tutor. Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
   function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
     external 
     returns (bool) 
@@ -86,8 +86,9 @@ contract PapaPay is ReentrancyGuard {
       return true;
     }
 
-  // Student approves that contract, the total cost of the course is deducted from student wallet and stored on the contract
-  // Pensar requires: msg.value=papaPrice
+/// Only a student can access this
+/// Student approves that contract, the total cost of the course is deducted from student wallet and stored on the contract
+
   function papaApprove(uint _papaCourse)
     external
     payable 
@@ -99,38 +100,40 @@ contract PapaPay is ReentrancyGuard {
       emit CourseDeposit(_papaCourse,msg.value);
     }
 
+/// List all courses for any given address
   function papaView(address _anyaddress) 
     external 
     view 
-    {
+    { }
 
-    // List all courses for any given address
-
-    }
-
-  // The tutor calls for the start of an individual lesson
-  // requires msg.sender=tutor balance!=0 // requires timestamp antes de prox firma
+/// Only a tutor can access this
+/// The tutor calls for the start of an individual lesson. The tutor cannot sign this if the student didn't sign attendance
   function papaInitLesson(uint _papaCourse) 
     external 
     {
       require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
+      require (papas[_papaCourse].papaBalance != 0, "Course has no balance");
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaLessons, "All lessons were given");
       require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn't sign attendance");
       papas[_papaCourse].papaTutorSign += 1;
       emit LessonStarted(_papaCourse,papas[_papaCourse].papaTutorSign);
     }
-  
-  // The student is giving attendance, making possible a partial withdrawn for the teacher
+
+/// Only a student can access this  
+/// The student is giving attendance, making possible a partial withdrawn for the teacher
   function papaAttendLesson(uint _papaCourse) 
     external 
     {
       require (msg.sender == papas[_papaCourse].papaStudent, "Not a Student");
+      require (papas[_papaCourse].papaBalance != 0, "Course has no balance");
       require (papas[_papaCourse].papaStudentSign != papas[_papaCourse].papaLessons, "All lessons were taken");
       require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign, "You already signed attendace. Lesson not started");
       papas[_papaCourse].papaStudentSign += 1;
       emit LessonAttended(_papaCourse,papas[_papaCourse].papaStudentSign);
     }
 
+/// Only a tutor can access this
+/// Tutor can withdraw one lesson at a time, or multiple lessons given at once
   function papaWithdraw(uint _papaCourse) 
     external
     nonReentrant
@@ -145,14 +148,14 @@ contract PapaPay is ReentrancyGuard {
       require(sent, "Failed to send Ether");
     }
 
+/// Only a student can access this
+/// If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining tokens
   function papaRecover(address _student, uint _papaCourse) public {
-
-  // If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining tokens
 
   }
 
   fallback () external {
-  //  A fallback here
+///  A fallback here
   }
 
 }
