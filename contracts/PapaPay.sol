@@ -19,7 +19,9 @@ contract PapaPay is ReentrancyGuard {
           // Amount of lessons
           uint papaLessons;
           // Timelock period in days. After that the student can recover his tokens
-          uint papaLock;
+          uint8 papaLock;
+          // Timestamp
+          uint papaTS;
           // Balance of Course
           uint papaBalance;
           // Teacher and student addresses and signed assistance
@@ -64,10 +66,12 @@ contract PapaPay is ReentrancyGuard {
   }
 
 /// Anyone who call this function will be a Tutor. Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
-  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
+  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint8 _papaLock, address _papaStudent ) 
     external 
-    returns (bool) 
+    returns (bool)
     {
+      require(_papaLock <= 168,"Timelock cannot exceed 7 days or 168 hours");
+      require(msg.sender != _papaStudent,"Student and teacher cannot be the same");
       papas[papaCount] = Papa({
         papaDesc: _papaDesc,
         papaCourse: papaCount,
@@ -75,13 +79,14 @@ contract PapaPay is ReentrancyGuard {
         papaBalance: 0,
         papaLessons: _papaLessons,
         papaLock: _papaLock,
+        papaTS: 0,
         papaTutor: msg.sender,
         papaTutorSign: 0,
         papaStudent: _papaStudent,
         papaStudentSign: 0,
         papaWithdrew: 0
         });
-      emit CourseCreated(papaCount,_papaDesc);
+      emit CourseCreated(papaCount, _papaDesc);
       papaCount = papaCount +1;
       return true;
     }
@@ -97,6 +102,7 @@ contract PapaPay is ReentrancyGuard {
     exactBalance(_papaCourse)
     {
       papas[_papaCourse].papaBalance += msg.value;
+      papas[_papaCourse].papaTS = block.timestamp + (papas[_papaCourse].papaLock * 60);
       emit CourseDeposit(_papaCourse,msg.value);
     }
 
@@ -116,6 +122,7 @@ contract PapaPay is ReentrancyGuard {
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaLessons, "All lessons were given");
       require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn't sign attendance");
       papas[_papaCourse].papaTutorSign += 1;
+      papas[_papaCourse].papaTS = block.timestamp + (papas[_papaCourse].papaLock * 60);
       emit LessonStarted(_papaCourse,papas[_papaCourse].papaTutorSign);
     }
 
@@ -124,7 +131,7 @@ contract PapaPay is ReentrancyGuard {
   function papaAttendLesson(uint _papaCourse) 
     external 
     {
-      require (msg.sender == papas[_papaCourse].papaStudent, "Not a Student");
+      require (msg.sender == papas[_papaCourse].papaStudent, "Not a student");
       require (papas[_papaCourse].papaBalance != 0, "Course has no balance");
       require (papas[_papaCourse].papaStudentSign != papas[_papaCourse].papaLessons, "All lessons were taken");
       require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign, "You already signed attendace. Lesson not started");
@@ -138,7 +145,7 @@ contract PapaPay is ReentrancyGuard {
     external
     nonReentrant
     {
-      require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
+      require (msg.sender == papas[_papaCourse].papaTutor, "Not a tutor");
       require (papas[_papaCourse].papaBalance != 0 && papas[_papaCourse].papaTutorSign != 0,"Check course balance or lesson signature");
       require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaWithdrew,"Already withdrawn your last lesson");
       uint papaAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
@@ -150,8 +157,17 @@ contract PapaPay is ReentrancyGuard {
 
 /// Only a student can access this
 /// If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining tokens
-  function papaRecover(address _student, uint _papaCourse) public {
-
+  function papaRecover(uint _papaCourse) 
+  external 
+  nonReentrant
+  {
+    require (msg.sender == papas[_papaCourse].papaStudent, "Not a student");
+    require (papas[_papaCourse].papaBalance != 0,"Course has no balance");
+    require (block.timestamp >= papas[_papaCourse].papaTS,"Timelock has not expired yet");
+    uint _recover = papas[_papaCourse].papaBalance;
+    papas[_papaCourse].papaBalance = 0;
+    (bool sent, ) = msg.sender.call{value: _recover}("");
+    require(sent, "Failed to send Ether");
   }
 
   fallback () external {
