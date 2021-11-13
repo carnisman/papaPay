@@ -19,7 +19,7 @@ contract PapaPay is ReentrancyGuard {
           // Amount of lessons
           uint papaLessons;
           // Timelock period in days. After that the student can recover his tokens
-          uint8 papaLock;
+          uint papaLock;
           // Timestamp
           uint papaTS;
           // Balance of Course
@@ -66,26 +66,19 @@ contract PapaPay is ReentrancyGuard {
   }
 
 /// Anyone who call this function will be a Tutor. Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
-  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint8 _papaLock, address _papaStudent ) 
+  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
     external 
     returns (bool)
     {
       require(_papaLock <= 168,"Timelock cannot exceed 7 days or 168 hours");
       require(msg.sender != _papaStudent,"Student and teacher cannot be the same");
-      papas[papaCount] = Papa({
-        papaDesc: _papaDesc,
-        papaCourse: papaCount,
-        papaPrice: _papaPrice,
-        papaBalance: 0,
-        papaLessons: _papaLessons,
-        papaLock: _papaLock,
-        papaTS: 0,
-        papaTutor: msg.sender,
-        papaTutorSign: 0,
-        papaStudent: _papaStudent,
-        papaStudentSign: 0,
-        papaWithdrew: 0
-        });
+      papas[papaCount].papaDesc = _papaDesc;
+      papas[papaCount].papaCourse= papaCount;
+      papas[papaCount].papaPrice= _papaPrice;
+      papas[papaCount].papaLessons= _papaLessons;
+      papas[papaCount].papaLock= _papaLock;
+      papas[papaCount].papaTutor= msg.sender;
+      papas[papaCount].papaStudent= _papaStudent;
       emit CourseCreated(papaCount, _papaDesc);
       papaCount = papaCount +1;
       return true;
@@ -156,7 +149,7 @@ contract PapaPay is ReentrancyGuard {
     }
 
 /// Only a student can access this
-/// If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining tokens
+/// If a time lock for unfulfillment is set, after that period of time, the student can recover all of his remaining assets
   function papaRecover(uint _papaCourse) 
   external 
   nonReentrant
