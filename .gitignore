@@ -1,3 +1,4 @@
 oldfiles
 node_modules
 *.code-workspace
+\client\node_modules
