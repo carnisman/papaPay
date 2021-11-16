@@ -7,7 +7,7 @@ contract PapaPay is ReentrancyGuard {
 
   uint public papaCount;
 
-  mapping (uint => Papa) private papas;
+  mapping (uint => Papa) public papas;
 
   struct Papa {
           // Short description of the contract 

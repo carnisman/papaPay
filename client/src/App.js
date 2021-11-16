@@ -1,51 +1,56 @@
 import React, { Component } from "react";
 import PapaPay from "./contracts/PapaPay.json";
-import getWeb3 from "./getWeb3";
+import Web3 from 'web3'
 import Navbar from './Navbar';
 import Main from './Main'
-import * as Utils from 'web3-utils';
 
 import "./App.css";
 
 class App extends Component {
   // state = { storageValue: 0, web3: null, accounts: null, contract: null };
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      const web3_utils = require('web3-utils');
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-      this.setState({ account: accounts[0] })
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      console.log(networkId)
-      const deployedNetwork = PapaPay.networks[networkId];
-      console.log(deployedNetwork)
-      if(deployedNetwork) {
-        const papapay = new web3.eth.Contract(PapaPay.abi, deployedNetwork && deployedNetwork.address)
-        this.setState({ papapay })
-        const papaCount = await papapay.methods.papaCount().call()
-        console.log(deployedNetwork);
-        console.log(deployedNetwork.address);
-        console.log(papaCount);
-        console.log(papapay);
-        console.log(web3.eth);
-        this.setState({ loading: false})
-      } else {
-        window.alert('PapaPay contract not deployed to detected network.')
-      }
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      // this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
+
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
     }
-  };
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.web3
+    // Load account
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+    const networkId = await web3.eth.net.getId()
+    const networkData = PapaPay.networks[networkId]
+    if(networkData) {
+      const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
+      this.setState({ papapay })
+      console.log(papapay);
+      const papaCount = await papapay.methods.papaCount().call()
+      this.setState({ papaCount })
+      // Load courses
+      for (var i = 0; i <= papaCount; i++) {
+       const papa = await papapay.methods.papas(i).call()
+        this.setState({
+          papas: [...this.state.papas, papa]
+        })
+      }
+      this.setState({ loading: false})
+    } else {
+      window.alert('PapaPay contract not deployed to detected network.')
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -56,6 +61,7 @@ class App extends Component {
       loading: true
     }
     this.papaCreate = this.papaCreate.bind(this)
+    this.papaApprove = this.papaApprove.bind(this)
   }
 
   papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
@@ -65,7 +71,14 @@ class App extends Component {
       this.setState({ loading: false })
     })
   }
-
+  
+  papaApprove(_papaCount, price) {
+    this.setState({ loading: true })
+    this.state.papapay.methods.papaApprove(_papaCount).send({ from: this.state.account, value: price })
+    .once('receipt', (receipt) => {
+      this.setState({ loading: false })
+    })
+  }
 
 
   render() {
@@ -77,12 +90,15 @@ class App extends Component {
         <Navbar account={this.state.account} />
         <div className="container-fluid mt-5">
           <div className="row">
-          <main role="main" className="col-lg-12 d-flex">
+            <main role="main" className="col-lg-12 d-flex">
               { this.state.loading
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
-                : <Main papaCreate={this.papaCreate} />
+                : <Main
+                  papas={this.state.papas}
+                  papaCreate={this.papaCreate}
+                  papaApprove={this.papaApprove} />
               }
-          </main>
+            </main>
           </div>
         </div>
       </div>

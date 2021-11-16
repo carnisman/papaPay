@@ -9,7 +9,7 @@ class Main extends Component {
         <form onSubmit={(event) => {
           event.preventDefault()
           const _papaDesc = this.papaDesc.value
-          const _papaPrice = window.web3_utils.toWei(this.papaPrice.value.toString(), 'Ether')
+          const _papaPrice = window.web3.utils.toWei(this.papaPrice.value.toString(), 'Ether')
           const _papaLessons = this.papaLessons.value
           const _papaLock = this.papaLock.value
           const _papaStudent = this.papaStudent.value
@@ -75,27 +75,33 @@ class Main extends Component {
             </tr>
           </thead>
           <tbody id="productList">
-            <tr>
-              <th scope="row">1</th>
-              <td>iPhone x</td>
-              <td>1 Eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td><button className="buyButton">Buy</button></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Macbook Pro</td>
-              <td>3 eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td><button className="buyButton">Buy</button></td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Airpods</td>
-              <td>0.5 eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td><button className="buyButton">Buy</button></td>
-            </tr>
+          { this.props.products.map((product, key) => {
+            return(
+                <tr key={key}>
+                <th scope="row">{papa.papaCount.toString()}</th>
+                <td>{papa.papaDesc}</td>
+                <td>{window.web3.utils.fromWei(papa.papaPrice.toString(), 'Ether')} Eth</td>
+                <td>{papa.papaLessons}</td>
+                <td>{papa.papaLock}</td>
+                <td>{papa.papaTutor}</td>
+                <td>{papa.papaStudent}</td>
+                <td>
+                    { !product.purchased
+                    ? <button
+                        name={product.id}
+                        value={product.price}
+                        onClick={(event) => {
+                            this.props.purchaseProduct(event.target.name, event.target.value)
+                        }}
+                        >
+                        Buy
+                        </button>
+                    : null
+                    }
+                    </td>
+                </tr>
+            )
+            })}
           </tbody>
         </table>
       </div>
