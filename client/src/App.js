@@ -72,9 +72,9 @@ class App extends Component {
     })
   }
   
-  papaApprove(_papaCount, price) {
+  papaApprove(_papaCourse, _price) {
     this.setState({ loading: true })
-    this.state.papapay.methods.papaApprove(_papaCount).send({ from: this.state.account, value: price })
+    this.state.papapay.methods.papaApprove(_papaCourse).send({ from: this.state.account, value: _price })
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })

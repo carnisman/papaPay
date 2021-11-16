@@ -68,17 +68,20 @@ class Main extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Price</th>
-              <th scope="col">Owner</th>
+              <th scope="col">Course Name</th>
+              <th scope="col">Course Price</th>
+              <th scope="col">Course Lessons #</th>
+              <th scope="col">Course Timelock in minutes</th>
+              <th scope="col">Tutor Address</th>
+              <th scope="col">Student Address</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody id="productList">
-          { this.props.products.map((product, key) => {
+          { this.props.papas.map((papa, key) => {
             return(
                 <tr key={key}>
-                <th scope="row">{papa.papaCount.toString()}</th>
+                <th scope="row">{papa.papaCourse.toString()}</th>
                 <td>{papa.papaDesc}</td>
                 <td>{window.web3.utils.fromWei(papa.papaPrice.toString(), 'Ether')} Eth</td>
                 <td>{papa.papaLessons}</td>
@@ -86,12 +89,12 @@ class Main extends Component {
                 <td>{papa.papaTutor}</td>
                 <td>{papa.papaStudent}</td>
                 <td>
-                    { !product.purchased
+                    { papa.papaBalance!==0
                     ? <button
-                        name={product.id}
-                        value={product.price}
+                        course={papa.papaCourse}
+                        value={papa.papaPrice}
                         onClick={(event) => {
-                            this.props.purchaseProduct(event.target.name, event.target.value)
+                            this.props.papaApprove(event.target.course, event.target.value)
                         }}
                         >
                         Buy
