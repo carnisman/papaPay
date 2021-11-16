@@ -7,8 +7,6 @@ contract PapaPay is ReentrancyGuard {
 
   uint public papaCount;
 
-  bool public prueba;
-
   mapping (uint => Papa) private papas;
 
   struct Papa {
@@ -114,7 +112,7 @@ contract PapaPay is ReentrancyGuard {
     {
       require (msg.sender == papas[_papaCourse].papaTutor, "Not a Tutor");
       require (papas[_papaCourse].papaBalance != 0, "Course has no balance");
-      require (papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaLessons, "All lessons were given");
+      require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaLessons, "All lessons were given");
       require (papas[_papaCourse].papaTutorSign < papas[_papaCourse].papaStudentSign, "Student didn't sign attendance");
       papas[_papaCourse].papaTutorSign += 1;
       papas[_papaCourse].papaTS = block.timestamp + (papas[_papaCourse].papaLock * 60);
@@ -128,7 +126,7 @@ contract PapaPay is ReentrancyGuard {
     {
       require (msg.sender == papas[_papaCourse].papaStudent, "Not a student");
       require (papas[_papaCourse].papaBalance != 0, "Course has no balance");
-      require (papas[_papaCourse].papaStudentSign != papas[_papaCourse].papaLessons, "All lessons were taken");
+      require (papas[_papaCourse].papaStudentSign < papas[_papaCourse].papaLessons, "All lessons were taken");
       require (papas[_papaCourse].papaStudentSign == papas[_papaCourse].papaTutorSign, "You already signed attendace. Lesson not started");
       papas[_papaCourse].papaStudentSign += 1;
       emit LessonAttended(_papaCourse,papas[_papaCourse].papaStudentSign);

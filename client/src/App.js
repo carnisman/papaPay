@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PapaPay from "./contracts/PapaPay.json";
-import logo from './logo.svg';
 import getWeb3 from "./getWeb3";
 import Navbar from './Navbar';
 import Main from './Main'
@@ -27,6 +26,8 @@ class App extends Component {
         const papapay = new web3.eth.Contract(PapaPay.abi, deployedNetwork && deployedNetwork.address)
         this.setState({ papapay })
         const papaCount = await papapay.methods.papaCount().call()
+        console.log(deployedNetwork);
+        console.log(deployedNetwork.address);
         console.log(papaCount);
         console.log(papapay);
         console.log(web3.eth);
