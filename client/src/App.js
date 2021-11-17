@@ -8,19 +8,21 @@ import "./App.css";
 
 class App extends Component {
   // state = { storageValue: 0, web3: null, accounts: null, contract: null };
-  async componentWillMount() {
+  async componentDidMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
   }
 
   async loadWeb3() {
     if (window.ethereum) {
+      //await window.ethereum.send('eth_requestAccounts');
       window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
+      return true;
+      //await window.ethereum.request({ method: 'eth_requestAccounts' })
     }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
+    //else if (window.web3) {
+    // window.web3 = new Web3(window.web3.currentProvider)
+    //}
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
     }
@@ -29,7 +31,7 @@ class App extends Component {
   async loadBlockchainData() {
     const web3 = window.web3
     // Load account
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = PapaPay.networks[networkId]
@@ -64,17 +66,17 @@ class App extends Component {
     this.papaApprove = this.papaApprove.bind(this)
   }
 
-  papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
-    this.setState({ loading: true })
-    this.state.papapay.methods.papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent).send({ from: this.state.account })
+  async papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
+    await this.setState({ loading: true })
+    await this.state.papapay.methods.papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent).send({ from: this.state.account })
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })
   }
   
-  papaApprove(_papaCourse, _price) {
-    this.setState({ loading: true })
-    this.state.papapay.methods.papaApprove(_papaCourse).send({ from: this.state.account, value: _price })
+  async papaApprove(_papaCourse, _price) {
+    await this.setState({ loading: true })
+    await this.state.papapay.methods.papaApprove(_papaCourse).send({ from: this.state.account, value: _price })
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })

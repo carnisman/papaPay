@@ -63,7 +63,7 @@ class Main extends Component {
           <button type="submit" className="btn btn-primary">Add Product</button>
         </form>
         <p> </p>
-        <h2>Buy Product</h2>
+        <h2>Approve course</h2>
         <table className="table">
           <thead>
             <tr>
@@ -89,15 +89,19 @@ class Main extends Component {
                 <td>{papa.papaTutor}</td>
                 <td>{papa.papaStudent}</td>
                 <td>
+                  
                     { papa.papaBalance!==0
+                    
                     ? <button
                         course={papa.papaCourse}
                         value={papa.papaPrice}
+                        
                         onClick={(event) => {
-                            this.props.papaApprove(event.target.course, event.target.value)
+                            console.log(event.target.course)
+                            this.props.papaApprove(papa.papaCourse, papa.papaPrice)
                         }}
                         >
-                        Buy
+                        Buy {papa.papaPrice}
                         </button>
                     : null
                     }

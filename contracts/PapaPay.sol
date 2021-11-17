@@ -72,6 +72,8 @@ contract PapaPay is ReentrancyGuard {
     {
       require(_papaLock <= 168,"Timelock cannot exceed 7 days or 168 hours");
       require(msg.sender != _papaStudent,"Student and teacher cannot be the same");
+      require(_papaPrice > 0,"Price cannot be 0");
+      require(_papaLessons > 0,"Lessons cannot be 0");
       papas[papaCount].papaDesc = _papaDesc;
       papas[papaCount].papaCourse= papaCount;
       papas[papaCount].papaPrice= _papaPrice;
