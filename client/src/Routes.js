@@ -11,11 +11,11 @@ import StudentLesson from "./pages/studentlesson";
 import Submenu from "./pages/Submenu";
 
 
-const Routes = (props) => {
+const Routes = (prop) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path={"/"} render={props => <><Submenu isConnected={props.isConnected} /><PapaWeb/></>} />
+        <Route exact path={"/"} render={props => <><Submenu isConnected={prop.isConnected} /><PapaWeb/></>} />
         <Route exact path={ "/tutor"} render={props => <><Submenu/><Tutor/></>} />
         <Route exact path={ "/student"} render={props => <><Submenu/><Student/></>} />
         <Route exact path={ "/approvecourse"} render={props => <><Submenu/><ApproveCourse/></>} />
