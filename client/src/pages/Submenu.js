@@ -5,13 +5,14 @@ import { ThemeContext } from "../providers/ThemeProvider";
 import { Button } from "@material-ui/core";
 //import { config } from "../utils/config";
 
-const Submenu = () => {
+const Submenu = (props) => {
   const { theme } = useContext(ThemeContext);
   const { active, account, library, connector, activate, deactivate } = useWeb3React()
 
   async function connect() {
     try {
       await activate(injected)
+      props.isConnected(true)
     } catch (ex) {
       console.log(ex)
     }

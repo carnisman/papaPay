@@ -1,9 +1,9 @@
 import React, {  useEffect, useState } from "react";
 import { Card, Container, List, ListItem, Typography, CardHeader, CardContent } from "@material-ui/core";
-import Submenu from "./Submenu";
+import Submenu from "../../pages/Submenu";
 
 import jwt from "jsonwebtoken";
-import { config } from "../utils/config";
+import { config } from "../../utils/config";
 import usePermisos from "../utils/usePermisos";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";

@@ -6,15 +6,21 @@ import Center from "../components/Center";
 //import { Card, Container, List, ListItem, Typography, CardHeader, CardContent } from "@material-ui/core";
 //import { ThemeContext } from "../providers/ThemeProvider";
 //import ErrorIcon from "@material-ui/icons/Error";
-import Submenu from "./Submenu";
+
 
 //import { config } from "../utils/config";
 
 const PapaWeb = (props) => {
   return (
     <>
-    <Submenu/>
+
         <Center>
+        <h1
+              style={{
+                padding: "1rem 0"
+                }}>
+                  Welcome to PapaPay! Please select one option
+        </h1>
         <div
             style={{
             padding: "0.5rem 0"
