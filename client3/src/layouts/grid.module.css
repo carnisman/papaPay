@@ -1,0 +1,22 @@
+.grid {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template:
+    ".      .       " 3rem
+    ".      _content" 1fr /
+     3rem   1fr;
+}
+
+.layouts {
+  border: none;
+  width: 100vw;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.content {
+  grid-area: _content;
+}
