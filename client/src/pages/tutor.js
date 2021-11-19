@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import { config } from "../utils/config";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
 
@@ -19,7 +18,7 @@ const Tutor = () => (
               style={{
               padding: "0.5rem 0"
               }}>
-                <Link to="/createcourse">
+                <Link to="/papaCreate">
                   <Button 
                     variant="contained" 
                     color="primary" 

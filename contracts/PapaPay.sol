@@ -11,7 +11,7 @@ contract PapaPay is ReentrancyGuard {
 
   struct Papa {
           // Short description of the contract 
-          string papaDesc;
+          bytes32 papaDesc;
           // Course number (unique)
           uint papaCourse;
           // Total price for the course
@@ -37,7 +37,7 @@ contract PapaPay is ReentrancyGuard {
 ///    EVENTS
 ///
 
-  event CourseCreated (uint papaCourse, string papaDesc);
+  event CourseCreated (uint papaCourse, bytes32 papaDesc);
   event CourseDeposit (uint papaCourse, uint papaBalance);
   event LessonStarted (uint papaCourse, uint papaTutorSign);
   event LessonAttended (uint papaCourse, uint papaStudentSign);
@@ -62,15 +62,13 @@ contract PapaPay is ReentrancyGuard {
       _;
   }
 
-  constructor()  {
-  }
+ /// constructor()  {
+ /// }
 
 /// Anyone who call this function will be a Tutor. Tutor creates the course, wich includes number of lessons, total cost, address of student and a time lock
-  function papaCreate( string memory _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
+  function papaCreate( bytes32 _papaDesc, uint _papaPrice, uint _papaLessons, uint _papaLock, address _papaStudent ) 
     external 
-    returns (bool)
     {
-      require(_papaLock <= 168,"Timelock cannot exceed 7 days or 168 hours");
       require(msg.sender != _papaStudent,"Student and teacher cannot be the same");
       require(_papaPrice > 0,"Price cannot be 0");
       require(_papaLessons > 0,"Lessons cannot be 0");
@@ -83,7 +81,6 @@ contract PapaPay is ReentrancyGuard {
       papas[papaCount].papaStudent= _papaStudent;
       emit CourseCreated(papaCount, _papaDesc);
       papaCount = papaCount +1;
-      return true;
     }
 
 /// Only a student can access this
@@ -100,12 +97,6 @@ contract PapaPay is ReentrancyGuard {
       papas[_papaCourse].papaTS = block.timestamp + (papas[_papaCourse].papaLock * 60);
       emit CourseDeposit(_papaCourse,msg.value);
     }
-
-/// List all courses for any given address
-  function papaView(address _anyaddress) 
-    external 
-    view 
-    { }
 
 /// Only a tutor can access this
 /// The tutor calls for the start of an individual lesson. The tutor cannot sign this if the student didn't sign attendance

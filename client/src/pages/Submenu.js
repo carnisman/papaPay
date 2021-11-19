@@ -1,18 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "../components/Connector"
 import { ThemeContext } from "../providers/ThemeProvider";
 import { Button } from "@material-ui/core";
-//import { config } from "../utils/config";
 
 const Submenu = (props) => {
   const { theme } = useContext(ThemeContext);
   const { active, account, library, connector, activate, deactivate } = useWeb3React()
 
+  useEffect(() => {
+    props.isConnected(active)
+  },[active]);
+
   async function connect() {
     try {
-      await activate(injected)
-      props.isConnected(true)
+      const response=await activate(injected)
     } catch (ex) {
       console.log(ex)
     }
@@ -25,8 +27,8 @@ const Submenu = (props) => {
       console.log(ex)
     }
   }
-
-  return (
+ 
+    return (
     <div
       style={{
         background: theme.content_background,

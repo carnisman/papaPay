@@ -10,7 +10,7 @@ const CenterDiv = (props) => (
       alignItems: "center",
       justifyContent: "center",
       flexFlow: "column",
-      padding: "6rem 0",
+      padding: "1rem 0",
     }}
   >
     {props.children}

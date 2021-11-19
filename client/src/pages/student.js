@@ -1,14 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import { config } from "../utils/config";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
 
-
 const Student = () => (
     <>
-
         <Center>
         <h1
               style={{
@@ -20,7 +17,7 @@ const Student = () => (
               style={{
               padding: "0.5rem 0"
               }}>
-                <Link to="/approvecourse">
+                <Link to="/papaApprove">
                   <Button 
                     variant="contained" 
                     color="primary" 
@@ -31,7 +28,6 @@ const Student = () => (
                   </Button>
                 </Link>
             </div>
-
             <div
               style={{
               padding: "0.5rem 0"
