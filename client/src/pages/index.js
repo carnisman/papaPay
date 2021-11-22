@@ -1,14 +1,7 @@
-//import React, { useContext, useEffect, useState } from "react";
 import React from "react";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Center from "../components/Center";
-//import { Card, Container, List, ListItem, Typography, CardHeader, CardContent } from "@material-ui/core";
-//import { ThemeContext } from "../providers/ThemeProvider";
-//import ErrorIcon from "@material-ui/icons/Error";
-
-
-//import { config } from "../utils/config";
 
 const PapaWeb = (props) => {
   return (
@@ -40,7 +33,7 @@ const PapaWeb = (props) => {
             style={{
             padding: "0.5rem 0"
           }}>
-            <Link to="/student">
+            <Link to="/studentLesson">
             <Button 
               variant="contained" 
               color="primary" 

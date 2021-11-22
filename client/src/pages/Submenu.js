@@ -3,10 +3,11 @@ import { useWeb3React } from "@web3-react/core"
 import { injected } from "../components/Connector"
 import { ThemeContext } from "../providers/ThemeProvider";
 import { Button } from "@material-ui/core";
+import "./submenu.css"
 
 const Submenu = (props) => {
   const { theme } = useContext(ThemeContext);
-  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  const { active, account, activate, deactivate } = useWeb3React()
 
   useEffect(() => {
     props.isConnected(active)
@@ -15,6 +16,7 @@ const Submenu = (props) => {
   async function connect() {
     try {
       const response=await activate(injected)
+      
     } catch (ex) {
       console.log(ex)
     }
@@ -31,21 +33,18 @@ const Submenu = (props) => {
     return (
     <div
       style={{
-        background: theme.content_background,
+        //background: theme.content_background,
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
         borderBottom: `1px solid ${theme.borders}`,
         padding: "1rem 0"
       }}
+      className="backpapa"
     >
-    <h1 
-      style={{
-        alignSelf:"center", 
-        marginLeft: "150px"
-        }}>
-          Welcome to PapaPay
-    </h1>
+    <div>
+          <h1 className="gradpapa">Welcome to PapaPay</h1>
+    </div>
     {active 
     ? 
       <>

@@ -1,22 +1,16 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
 
-class papaCreate extends Component {
-  
-  constructor(props) {
-    super(props)
-    this.state = {
-      _papaDesc:'',
-      _papaPrice: '',
-      _papaLessons: '', 
-      _papaLock: '',
-      _papaStudent: ''
-    }
-  }
-  
-  render () {
+const papaCreate = (props) => {
+
+  const [_papaDesc,setDesc] = useState('')
+  const [_papaPrice,setPrice] = useState('')
+  const [_papaLessons,setLessons] = useState('')
+  const [_papaLock,setLock] = useState('')
+  const [_papaStudent,setStudent] = useState('')
+
   return (
     <>
         <Center>
@@ -26,13 +20,27 @@ class papaCreate extends Component {
                 }}>
                   Create a course
         </h1>
+        <h3
+              style={{
+                padding: "1rem 0",
+                textAlign: "center"
+                }}>
+                  Here you can create a course. Have in mind some rules:
+                  <div style={{
+                    padding: "1rem 0",
+                    textAlign: "justify"
+                  }}>
+                  <li>You cannot enroll yourself as a student</li>
+                  <li> The price and lessons quantity cannot be 0</li>
+                  </div>
+        </h3>
             <div
               style={{
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={this.state._papaDesc}
-                    onChange={(event) => { this.setState({ _papaDesc: event.target.value });}}
+                    value={_papaDesc}
+                    onChange={event => setDesc(event.target.value)}
                     label="Insert course description" 
                     variant="outlined" />
             </div>
@@ -41,8 +49,8 @@ class papaCreate extends Component {
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={this.state._papaPrice}
-                    onChange={(event) => {this.setState({ _papaPrice: event.target.value });}}
+                    value={_papaPrice}
+                    onChange={event => setPrice(event.target.value)}
                     label="Insert course price" 
                     variant="outlined" />
             </div>
@@ -51,8 +59,8 @@ class papaCreate extends Component {
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={this.state._papaLessons}
-                    onChange={(event) => {this.setState({ _papaLessons: event.target.value });}}
+                    value={_papaLessons}
+                    onChange={event => setLessons(event.target.value)}
                     label="Insert number of lessons" 
                     variant="outlined" />
             </div>
@@ -61,8 +69,8 @@ class papaCreate extends Component {
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={this.state._papaLock}
-                    onChange={(event) => {this.setState({ _papaLock: event.target.value });}}
+                    value={_papaLock}
+                    onChange={event => setLock(event.target.value)}
                     label="Insert timelock in hours" 
                     variant="outlined" />
             </div>
@@ -71,8 +79,8 @@ class papaCreate extends Component {
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={this.state._papaStudent}
-                    onChange={(event) => {this.setState({ _papaStudent: event.target.value });}}
+                    value={props._papaStudent}
+                    onChange={event => setStudent(event.target.value)}
                     label="Insert student address" 
                     variant="outlined" />
             </div>
@@ -82,8 +90,10 @@ class papaCreate extends Component {
               padding: "0.5rem 0"
               }}>
                   <Button
-                    disabled={!this.props.papapay}
-                    onClick={()=>{this.props.papaCreate(this.state._papaDesc,this.state._papaPrice,this.state._papaLessons,this.state._papaLock,this.state._papaStudent)}}
+                    disabled={!props.papapay}
+                    onClick={ ()=> {
+                      props.papaCreate(_papaDesc,_papaPrice,_papaLessons,_papaLock,_papaStudent)
+                      }}
                     variant="contained" 
                     color="primary" 
                     style={{
@@ -92,7 +102,75 @@ class papaCreate extends Component {
                     Create Course
                   </Button>
             </div>
-            {this.props.papapay
+            
+            <div style={{
+              textAlign: 'center'
+            }}>
+            <div style={{
+              padding: "0.5rem 0"
+              }}>
+              <b>Transaction status:</b>
+            </div>
+            { (() => {
+                  if (props.executed == 0) {
+                    return (
+                      <div>
+                      Waiting for interaction
+                      </div>
+                      )
+                  } else 
+                  if (props.executed == 1){
+                    return (
+                      <div style={{
+                        color: 'blue'
+                      }}>
+                      Transaction in progress...
+                      </div>
+                      )
+                  } else
+                  if (props.executed == 2) {
+                    return (
+                      <>
+                      <div style={{
+                        color: 'green'
+                      }}>
+                      <div>
+                      Transaction successful
+                      </div>
+                      <div>
+                      TX Hash: {props.receiptTx.transactionHash}<br></br>
+                      </div>
+                      <div>
+                      TX Block: {props.receiptTx.blockNumber}<br></br>
+                      </div>
+                      <div>
+                      Gas used: {props.receiptTx.gasUsed}<br></br>
+                      </div>
+                      </div>
+                      </>
+                    )
+                  } else
+                  if (props.executed == 3) {
+                    return (
+                      <>
+                      <div style={{
+                        color: 'red'
+                      }}>
+                      <div>
+                      <b>Transaction error!</b>
+                      </div>
+                      <div>
+                      {props.errorMsg}
+                      </div>
+                      </div>
+                      </>
+                      )
+                  }
+                })
+              ()}
+              </div>
+
+            {props.papapay
                     ?<div style={{
                         textAlign: "center",
                         padding: "1rem 0",
@@ -111,7 +189,7 @@ class papaCreate extends Component {
           <BackButton/>
         </Center>
     </>
-    )}
+    )
 }
 
 export default papaCreate;

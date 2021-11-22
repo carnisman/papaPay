@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import Routes from "./Routes";
-import { Web3ReactProvider } from '@web3-react/core';
+import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import CheckMetamask from "./components/CheckMetamask";
 import Web3 from 'web3';
 import "./index.css";
@@ -22,11 +22,19 @@ class App extends Component  {
       papas: [],
       loading: true,
       connected: false,
-      papapay: null
+      papapay: null,
+      receiptTx: [],
+      errorMsg: null,
+      // executed codes --> 0: no execution / 1: waiting execution / 2: successfull execution / 3: error
+      executed: 0
     }
     this.isConnected = this.isConnected.bind(this)
-    this.papaApprove = this.papaApprove.bind(this)
     this.papaCreate = this.papaCreate.bind(this)
+    this.papaApprove = this.papaApprove.bind(this)
+    this.papaInitLesson = this.papaInitLesson.bind(this)
+    this.papaAttendLesson = this.papaAttendLesson.bind(this)
+    this.papaWithdraw = this.papaWithdraw.bind(this)
+    this.papaRecover = this.papaRecover.bind(this)
   }
 
   isConnected = (x) => {
@@ -35,62 +43,168 @@ class App extends Component  {
       this.blockchainData();
     } else { 
       this.setState({papapay:null})
+      this.setState({papas:[]})
     }
   }
 
   blockchainData = async () => {
     const web3 = new Web3(window.ethereum)
-    //console.log('Montando APP',web3)
     // Load account
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     this.setState({ account: accounts[0] })
-    //console.log(accounts[0])
     const networkId = await web3.eth.net.getId()
     const networkData = PapaPay.networks[networkId]
     if(networkData) {
       const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
       this.setState({ papapay })
-      //console.log('PAPAPAY',papapay);
-      const papaCount = await papapay.methods.papaCount().call()
+      const papaCount = await papapay.methods
+        .papaCount()
+        .call()
       this.setState({ papaCount })
       // Load courses
-      for (var i = 0; i <= papaCount; i++) {
-       const papa = await papapay.methods.papas(i).call()
+      for (var i = 0; i < papaCount; i++) {
+        const papa = await papapay.methods
+          .papas(i)
+          .call()
         this.setState({
-          papas: [...this.state.papas, papa]
+            papas: [...this.state.papas, papa]
         })
       }
       this.setState({ loading: false})
     } else {
-      window.alert('PapaPay contract not deployed to detected network.')
+        window.alert('PapaPay contract not deployed to detected network.')
     }
   }
 
   async papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
+    this.setState ({executed: 1})
     const web3 = new Web3(window.ethereum)
     const _papaPriceConv = web3.utils.toWei(_papaPrice.toString(), 'ether')
     const _papaDescConv = web3.utils.asciiToHex(_papaDesc)
-    //console.log('Cosas',_papaDescConv, _papaPriceConv, _papaLessons, _papaLock, _papaStudent)
     await this.setState({ loading: true })
-    await this.state.papapay.methods.papaCreate(_papaDescConv, _papaPriceConv, _papaLessons, _papaLock, _papaStudent).send({ from: this.state.account })
-    .once('receipt', (receipt) => {
-     this.setState({ loading: false })
-    })
+    await this.state.papapay.methods
+      .papaCreate(_papaDescConv, _papaPriceConv, _papaLessons, _papaLock, _papaStudent)
+      .send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
   }
   
   async papaApprove(_papaCourse, _price) {
+    this.setState ({executed: 1})
     await this.setState({ loading: true })
-    await this.state.papapay.methods.papaApprove(_papaCourse).send({ from: this.state.account, value: _price })
-    .once('receipt', (receipt) => {
-      this.setState({ loading: false })
-    })
+    await this.state.papapay.methods
+      .papaApprove(_papaCourse)
+      .send({ from: this.state.account, value: _price })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
   }
+
+  async papaInitLesson(_papaCourse) {
+    this.setState ({executed: 1})
+    await this.setState({ loading: true })
+    await this.state.papapay.methods
+      .papaInitLesson(_papaCourse)
+      .send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
+  }
+
+  async papaAttendLesson(_papaCourse) {
+    this.setState ({executed: 1})
+    await this.setState({ loading: true })
+    await this.state.papapay.methods
+      .papaAttendLesson(_papaCourse)
+      .send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
+  }
+
+  async papaWithdraw(_papaCourse) {
+    this.setState ({executed: 1})
+    await this.setState({ loading: true })
+    await this.state.papapay.methods
+      .papaWithdraw(_papaCourse)
+      .send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
+  }
+
+  async papaRecover(_papaCourse) {
+    this.setState ({executed: 1})
+    await this.setState({ loading: true })
+    await this.state.papapay.methods
+      .papaRecover(_papaCourse)
+      .send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ receiptTx: receipt })
+        this.setState({ errorMsg: null })
+        this.setState({ loading: false })
+        this.setState ({executed: 2})
+      })
+      .on('error', (error) => {
+        this.setState({ errorMsg: error.message })
+        this.setState ({executed: 3})
+       })
+  }
+
 
   render () {
      return (
     <ThemeProvider>
       <Web3ReactProvider getLibrary={getLibrary}>
-          <Routes isConnected={this.isConnected} papapay={this.state.papapay} papaCreate={this.papaCreate} papaApprove={this.papaApprove} />
+          <Routes 
+            papas={this.state.papas} 
+            isConnected={this.isConnected} 
+            papapay={this.state.papapay} 
+            papaCreate={this.papaCreate} 
+            papaApprove={this.papaApprove} 
+            papaInitLesson={this.papaInitLesson} 
+            papaAttendLesson={this.papaAttendLesson}
+            papaWithdraw={this.papaWithdraw}
+            papaRecover={this.papaRecover}
+            executed={this.state.executed}
+            errorMsg={this.state.errorMsg} 
+            receiptTx={this.state.receiptTx} />
       </Web3ReactProvider>
     </ThemeProvider>
   );
