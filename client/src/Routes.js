@@ -37,6 +37,8 @@ const Routes = (prop) => {
           <CreateCourse
             papapay={prop.papapay}
             papaCreate={prop.papaCreate}
+            cleanExe={prop.cleanExe}
+            cleanBlochainData={prop.cleanBlochainData}
             papaAddress={prop.papaAddress}
             receiptTx={prop.receiptTx}
             errorMsg={prop.errorMsg}
@@ -52,6 +54,8 @@ const Routes = (prop) => {
           <TutorLesson
             papas={prop.papas}
             papapay={prop.papapay}
+            cleanExe={prop.cleanExe}
+            cleanBlochainData={prop.cleanBlochainData}
             papaInitLesson={prop.papaInitLesson}
             papaWithdraw={prop.papaWithdraw}
             receiptTx={prop.receiptTx}
@@ -68,6 +72,8 @@ const Routes = (prop) => {
           <StudentLesson
             papapay={prop.papapay}
             papas={prop.papas}
+            cleanExe={prop.cleanExe}
+            cleanBlochainData={prop.cleanBlochainData}
             papaApprove={prop.papaApprove}
             papaAttendLesson={prop.papaAttendLesson}
             papaRecover={prop.papaRecover}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import Routes from "./Routes";
-import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
+import { Web3ReactProvider } from '@web3-react/core';
 import Web3 from 'web3';
 import "./index.css";
 import PapaPay from "./contracts/PapaPay.json"
@@ -33,6 +33,8 @@ class App extends Component  {
       stExe: 0
     }
     this.isConnected = this.isConnected.bind(this)
+    this.cleanExe = this.cleanExe.bind(this)
+    this.cleanBlockchainData = this.cleanBlockchainData.bind(this)
     this.papaCreate = this.papaCreate.bind(this)
     this.papaApprove = this.papaApprove.bind(this)
     this.papaInitLesson = this.papaInitLesson.bind(this)
@@ -47,9 +49,20 @@ class App extends Component  {
       this.blockchainData();
 
     } else { 
-      this.setState({papapay:null})
-      this.setState({papas:[]})
+      this.setState({ papapay:null })
+      this.setState({ papas:[] })
     }
+  }
+
+  cleanExe = () => {
+    this.setState({ crExe: 0 })
+    this.setState({ tuExe: 0 })
+    this.setState({ stExe: 0 })
+  }
+
+  cleanBlockchainData = () => {
+    this.setState({ papapay:null })
+    this.setState({ papas:[] })
   }
 
   blockchainData = async () => {
@@ -67,16 +80,13 @@ class App extends Component  {
         .call()
       const papaAddress = await papapay._address
       this.setState({ papaAddress })
-      console.log(papaAddress)
       this.setState({ papaCount })
       // Load courses
       for (var i = 0; i < papaCount; i++) {
         const papa = await papapay.methods
           .papas(i)
           .call()
-        this.setState({
-            papas: [...this.state.papas, papa]
-        })
+        this.setState({ papas: [...this.state.papas, papa] })
       }
       this.setState({ loading: false})
     } else {
@@ -85,7 +95,7 @@ class App extends Component  {
   }
 
   async papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
-    this.setState ({crExe: 1})
+    this.setState({ crExe: 1 })
     const web3 = new Web3(window.ethereum)
     const _papaPriceConv = web3.utils.toWei(_papaPrice.toString(), 'ether')
     const _papaDescConv = web3.utils.asciiToHex(_papaDesc)
@@ -97,16 +107,19 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({crExe: 2})
+        this.setState({ crExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({crExe: 3})
+        this.setState({ crExe: 3 })
        })
+    this.blockchainData()
   }
   
   async papaApprove(_papaCourse, _price) {
-    this.setState ({stExe: 1})
+    this.setState({ stExe: 1 })
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaApprove(_papaCourse)
@@ -115,16 +128,19 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({stExe: 2})
+        this.setState({ stExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({stExe: 3})
+        this.setState({ stExe: 3 })
        })
+    this.blockchainData()
   }
 
   async papaInitLesson(_papaCourse) {
-    this.setState ({tuExe: 1})
+    this.setState({ tuExe: 1 })
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaInitLesson(_papaCourse)
@@ -133,16 +149,19 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({tuExe: 2})
+        this.setState({ tuExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({tuExe: 3})
+        this.setState({ tuExe: 3 })
        })
+    this.blockchainData()
   }
 
   async papaAttendLesson(_papaCourse) {
-    this.setState ({stExe: 1})
+    this.setState({ stExe: 1 })
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaAttendLesson(_papaCourse)
@@ -151,16 +170,19 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({stExe: 2})
+        this.setState({ stExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({stExe: 3})
+        this.setState({ stExe: 3 })
        })
+    this.blockchainData()
   }
 
   async papaWithdraw(_papaCourse) {
-    this.setState ({tuExe: 1})
+    this.setState({ tuExe: 1 })
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaWithdraw(_papaCourse)
@@ -169,16 +191,19 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({tuExe: 2})
+        this.setState({ tuExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({tuExe: 3})
+        this.setState({ tuExe: 3 })
        })
+    this.blockchainData()
   }
 
   async papaRecover(_papaCourse) {
-    this.setState ({stExe: 1})
+    this.setState({ stExe: 1 })
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaRecover(_papaCourse)
@@ -187,12 +212,15 @@ class App extends Component  {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
-        this.setState ({stExe: 2})
+        this.setState({ stExe: 2 })
+        this.setState({ papapay:null })
+        this.setState({ papas:[] })
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
-        this.setState ({stExe: 3})
+        this.setState({ stExe: 3 })
        })
+    this.blockchainData()
   }
 
 
@@ -201,9 +229,11 @@ class App extends Component  {
     <ThemeProvider>
       <Web3ReactProvider getLibrary={getLibrary}>
           <Routes 
-            papas={this.state.papas} 
-            isConnected={this.isConnected}
+            papas={this.state.papas}
             papapay={this.state.papapay}
+            isConnected={this.isConnected}
+            cleanExe={this.cleanExe}
+            cleanBlockchainData={this.cleanBlockchainData}
             papaCreate={this.papaCreate}
             papaApprove={this.papaApprove}
             papaAddress={this.state.papaAddress}

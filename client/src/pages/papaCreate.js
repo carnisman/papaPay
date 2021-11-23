@@ -7,6 +7,9 @@ import Web3 from 'web3';
 
 const papaCreate = (props) => {
 
+  useEffect(() => props.cleanExe, []);
+  useEffect(() => props.cleanBlockchainData, []);
+
   const web3 = new Web3(window.ethereum)
   const { account } = useWeb3React()
 

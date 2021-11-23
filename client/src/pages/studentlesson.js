@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Table, TableBody, TableCell, TableHead, TableRow, Button } from "@material-ui/core";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
@@ -7,20 +7,23 @@ import Web3 from 'web3';
 
 const studentLesson = (props) => {
 
-    const web3 = new Web3(window.ethereum)
-    const { account } = useWeb3React()
+  useEffect(() => props.cleanExe, []);
+  useEffect(() => props.cleanBlockchainData, []);
 
-    function cleanString(input) {
-      var output = "";
-      for (var i=0; i<input.length; i++) {
-          if (input.charCodeAt(i) <= 256 && input.charCodeAt(i) >= 32) {
-              output += input.charAt(i);
-          }
-      }
-      return output;
+  const web3 = new Web3(window.ethereum)
+  const { account } = useWeb3React()
+
+  function cleanString(input) {
+    var output = "";
+    for (var i=0; i<input.length; i++) {
+        if (input.charCodeAt(i) <= 256 && input.charCodeAt(i) >= 32) {
+            output += input.charAt(i);
+        }
     }
+    return output;
+  }
 
-    return(
+  return(
     <>
         <Center>
         <h1
@@ -169,6 +172,6 @@ const studentLesson = (props) => {
           <BackButton/>
         </Center>
     </> 
-    )}
+  )}
 
 export default studentLesson;
