@@ -109,7 +109,6 @@ const studentLesson = (props) => {
                       )
                   } else
                   if (props.stExe == 2) {
-                    forceUpdate();
                     return (
                       <>
                       <div style={{
