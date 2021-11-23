@@ -90,7 +90,7 @@ const papaCreate = (props) => {
               padding: "0.5rem 0"
               }}>
                 <TextField 
-                    value={props._papaStudent}
+                    value={_papaStudent}
                     onChange={event => setStudent(event.target.value)}
                     label="Insert student address" 
                     variant="outlined" />
@@ -150,6 +150,11 @@ const papaCreate = (props) => {
                       )
                   } else
                   if (props.crExe == 2) {
+                    () => setDesc('');
+                    () => setPrice('');
+                    () => setLessons('');
+                    () => setLock('');
+                    () => setStudent('');
                     return (
                       <>
                       <div style={{
