@@ -159,5 +159,16 @@ contract PapaPay is ReentrancyGuard {
   fallback () external {
 ///  A fallback here
   }
-
+  /// TEST TEST TEST
+  // function fetchItem(uint _sku) public view
+  //    returns (string memory name, uint sku, uint price, uint state, address seller, address buyer)
+  //  {
+  //    name = items[_sku].name;
+  //    sku = items[_sku].sku;
+  //    price = items[_sku].price;
+  //    state = uint(items[_sku].state);
+  //    seller = items[_sku].seller;
+  //    buyer = items[_sku].buyer;
+  //    return (name, sku, price, state, seller, buyer);
+  //  }
 }
