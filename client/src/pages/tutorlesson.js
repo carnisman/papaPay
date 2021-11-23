@@ -89,14 +89,14 @@ const tutorLesson = (props) => {
               <b>Transaction status:</b>
             </div>
             { (() => {
-                  if (props.executed == 0) {
+                  if (props.tuExe == 0) {
                     return (
                       <div>
                       Waiting for interaction
                       </div>
                       )
                   } else 
-                  if (props.executed == 1){
+                  if (props.tuExe == 1){
                     return (
                       <div style={{
                         color: 'blue'
@@ -105,7 +105,7 @@ const tutorLesson = (props) => {
                       </div>
                       )
                   } else
-                  if (props.executed == 2) {
+                  if (props.tuExe == 2) {
                     return (
                       <>
                       <div style={{
@@ -127,7 +127,7 @@ const tutorLesson = (props) => {
                       </>
                     )
                   } else
-                  if (props.executed == 3) {
+                  if (props.tuExe == 3) {
                     return (
                       <>
                       <div style={{

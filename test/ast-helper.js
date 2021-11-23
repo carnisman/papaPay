@@ -23,13 +23,13 @@ const papas = (ca) => {
 
 const isDefined = members => variableName => {
   return members 
-    ? members.find((papa) => papa.papaDesc === variableName) 
+    ? members.find((papa) => papa.name === variableName) 
     : null;
 };
 
 const isPayable = members => variableName => {
   if (members === undefined) return false;
-  const definition = members.find((papa) => papa.papaDesc === variableName);
+  const definition = members.find((papa) => papa.name === variableName);
   return definition && definition.mutability === "payable";
 };
 

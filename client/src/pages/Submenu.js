@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "../components/Connector"
 import { ThemeContext } from "../providers/ThemeProvider";
@@ -16,7 +16,6 @@ const Submenu = (props) => {
   async function connect() {
     try {
       const response=await activate(injected)
-      
     } catch (ex) {
       console.log(ex)
     }
@@ -33,7 +32,6 @@ const Submenu = (props) => {
     return (
     <div
       style={{
-        //background: theme.content_background,
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
@@ -51,10 +49,23 @@ const Submenu = (props) => {
         <span
           style={{
             marginLeft: "auto",
-            padding: "15px"
+            padding: "2px",
+            marginRight: "40px"
           }}>
-          Connected with <b>{account}</b>
-        </span><Button
+          <div
+          style={{
+            padding: "2px"
+          }}>
+          Connected with wallet: <b>{account}</b>
+          </div>
+          <div
+          style={{
+            padding: "2px"
+          }}>
+          PapaPay contract address: <b>{props.papaAddress}</b>
+          </div>
+        </span>
+        <Button
           onClick={disconnect}
           variant="contained"
           color="primary"

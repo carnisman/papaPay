@@ -7,18 +7,19 @@ import Web3 from 'web3';
 
 const studentLesson = (props) => {
 
-  function cleanString(input) {
-    var output = "";
-    for (var i=0; i<input.length; i++) {
-        if (input.charCodeAt(i) <= 256 && input.charCodeAt(i) >= 32) {
-            output += input.charAt(i);
-        }
-    }
-    return output;
-  }
-
     const web3 = new Web3(window.ethereum)
     const { account } = useWeb3React()
+
+    function cleanString(input) {
+      var output = "";
+      for (var i=0; i<input.length; i++) {
+          if (input.charCodeAt(i) <= 256 && input.charCodeAt(i) >= 32) {
+              output += input.charAt(i);
+          }
+      }
+      return output;
+    }
+
     return(
     <>
         <Center>
@@ -91,14 +92,14 @@ const studentLesson = (props) => {
               <b>Transaction status:</b>
             </div>
             { (() => {
-                  if (props.executed == 0) {
+                  if (props.stExe == 0) {
                     return (
                       <div>
                       Waiting for interaction
                       </div>
                       )
                   } else 
-                  if (props.executed == 1){
+                  if (props.stExe == 1){
                     return (
                       <div style={{
                         color: 'blue'
@@ -107,7 +108,8 @@ const studentLesson = (props) => {
                       </div>
                       )
                   } else
-                  if (props.executed == 2) {
+                  if (props.stExe == 2) {
+                    forceUpdate();
                     return (
                       <>
                       <div style={{
@@ -129,7 +131,7 @@ const studentLesson = (props) => {
                       </>
                     )
                   } else
-                  if (props.executed == 3) {
+                  if (props.stExe == 3) {
                     return (
                       <>
                       <div style={{

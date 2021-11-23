@@ -12,52 +12,58 @@ const Routes = (prop) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path={"/"} render={props => 
+        <Route exact path={"/"} render={props =>
           <>
-            <Submenu 
-              isConnected={prop.isConnected} 
+            <Submenu
+              isConnected={prop.isConnected}
+              papaAddress={prop.papaAddress}
             />
             <PapaWeb/>
           </>} />
-        <Route exact path={ "/tutor"} render={props => 
+        <Route exact path={ "/tutor"} render={props =>
           <>
-            <Submenu 
-              isConnected={prop.isConnected} 
+            <Submenu
+              isConnected={prop.isConnected}
+              papaAddress={prop.papaAddress}
             />
             <Tutor/>
           </>} />
-        <Route exact path={ "/papaCreate"} render={props => 
+        <Route exact path={ "/papaCreate"} render={props =>
           <>
-          <Submenu 
+          <Submenu
             isConnected={prop.isConnected}
+            papaAddress={prop.papaAddress}
           />
           <CreateCourse
             papapay={prop.papapay}
             papaCreate={prop.papaCreate}
+            papaAddress={prop.papaAddress}
             receiptTx={prop.receiptTx}
             errorMsg={prop.errorMsg}
-            executed={prop.executed}
+            crExe={prop.crExe}
           />
         </>} />
         <Route exact path={ "/tutorLesson"} render={props =>
           <>
           <Submenu
             isConnected={prop.isConnected}
+            papaAddress={prop.papaAddress}
           />
           <TutorLesson
             papas={prop.papas}
             papapay={prop.papapay}
-            papaInitLesson={props.papaInitLesson}
-            papaWithdraw={props.papaWithdraw}
+            papaInitLesson={prop.papaInitLesson}
+            papaWithdraw={prop.papaWithdraw}
             receiptTx={prop.receiptTx}
             errorMsg={prop.errorMsg}
-            executed={prop.executed}
+            tuExe={prop.tuExe}
           />
         </>} />
         <Route exact path={ "/studentLesson"} render={props =>
           <>
           <Submenu
             isConnected={prop.isConnected}
+            papaAddress={prop.papaAddress}
           />
           <StudentLesson
             papapay={prop.papapay}
@@ -67,7 +73,7 @@ const Routes = (prop) => {
             papaRecover={prop.papaRecover}
             receiptTx={prop.receiptTx}
             errorMsg={prop.errorMsg}
-            executed={prop.executed}
+            stExe={prop.stExe}
           />
         </>} />
       </Switch>

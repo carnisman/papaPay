@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
+import { useWeb3React } from "@web3-react/core"
+import Web3 from 'web3';
 
 const papaCreate = (props) => {
+
+  const web3 = new Web3(window.ethereum)
+  const { account } = useWeb3React()
 
   const [_papaDesc,setDesc] = useState('')
   const [_papaPrice,setPrice] = useState('')
@@ -25,13 +30,16 @@ const papaCreate = (props) => {
                 padding: "1rem 0",
                 textAlign: "center"
                 }}>
-                  Here you can create a course. Have in mind some rules:
+                  Here you can create a course. Have in mind this checklist:
                   <div style={{
                     padding: "1rem 0",
                     textAlign: "justify"
                   }}>
+                  <li>All fields must be filled</li>
                   <li>You cannot enroll yourself as a student</li>
-                  <li> The price and lessons quantity cannot be 0</li>
+                  <li>The price and lessons quantity cannot be 0</li>
+                  <li>You must enter a valid ethereum address</li>
+                  <li>If the <i>Create Course</i> button is disabled, please review this checklist</li>
                   </div>
         </h3>
             <div
@@ -71,7 +79,7 @@ const papaCreate = (props) => {
                 <TextField 
                     value={_papaLock}
                     onChange={event => setLock(event.target.value)}
-                    label="Insert timelock in hours" 
+                    label="Insert timelock in minutes" 
                     variant="outlined" />
             </div>
             <div
@@ -90,14 +98,24 @@ const papaCreate = (props) => {
               padding: "0.5rem 0"
               }}>
                   <Button
-                    disabled={!props.papapay}
+                    disabled={!props.papapay ||
+                              _papaDesc.length == 0 ||
+                              _papaPrice.length == 0 ||
+                              _papaPrice == 0 ||
+                              _papaLessons.length == 0 ||
+                              _papaLessons == 0 ||
+                              _papaLock.length == 0 ||
+                              _papaStudent.length == 0 ||
+                              _papaStudent == account  ||
+                              _papaStudent == props.papaAddress||
+                              !web3.utils.isAddress(_papaStudent) }
                     onClick={ ()=> {
                       props.papaCreate(_papaDesc,_papaPrice,_papaLessons,_papaLock,_papaStudent)
                       }}
-                    variant="contained" 
-                    color="primary" 
+                    variant="contained"
+                    color="primary"
                     style={{
-                      textAlign: "center", 
+                      textAlign: "center",
                       width:"200px"}}>
                     Create Course
                   </Button>
@@ -112,14 +130,14 @@ const papaCreate = (props) => {
               <b>Transaction status:</b>
             </div>
             { (() => {
-                  if (props.executed == 0) {
+                  if (props.crExe == 0) {
                     return (
                       <div>
                       Waiting for interaction
                       </div>
                       )
                   } else 
-                  if (props.executed == 1){
+                  if (props.crExe == 1){
                     return (
                       <div style={{
                         color: 'blue'
@@ -128,7 +146,7 @@ const papaCreate = (props) => {
                       </div>
                       )
                   } else
-                  if (props.executed == 2) {
+                  if (props.crExe == 2) {
                     return (
                       <>
                       <div style={{
@@ -150,7 +168,7 @@ const papaCreate = (props) => {
                       </>
                     )
                   } else
-                  if (props.executed == 3) {
+                  if (props.crExe == 3) {
                     return (
                       <>
                       <div style={{
