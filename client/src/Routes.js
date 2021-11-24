@@ -12,27 +12,30 @@ const Routes = (prop) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path={"/"} render={props =>
+        <Route exact path={"/"} render={() =>
           <>
             <Submenu
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
+              ethAccount={prop.ethAccount}
             />
             <PapaWeb/>
           </>} />
-        <Route exact path={ "/tutor"} render={props =>
+        <Route exact path={ "/tutor"} render={() =>
           <>
             <Submenu
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
+              ethAccount={prop.ethAccount}
             />
             <Tutor/>
           </>} />
-        <Route exact path={ "/papaCreate"} render={props =>
+        <Route exact path={ "/papaCreate"} render={() =>
           <>
           <Submenu
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
+            ethAccount={prop.ethAccount}
           />
           <CreateCourse
             papapay={prop.papapay}
@@ -45,11 +48,12 @@ const Routes = (prop) => {
             crExe={prop.crExe}
           />
         </>} />
-        <Route exact path={ "/tutorLesson"} render={props =>
+        <Route exact path={ "/tutorLesson"} render={() =>
           <>
           <Submenu
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
+            ethAccount={prop.ethAccount}
           />
           <TutorLesson
             papas={prop.papas}
@@ -63,11 +67,12 @@ const Routes = (prop) => {
             tuExe={prop.tuExe}
           />
         </>} />
-        <Route exact path={ "/studentLesson"} render={props =>
+        <Route exact path={ "/studentLesson"} render={() =>
           <>
           <Submenu
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
+            ethAccount={prop.ethAccount}
           />
           <StudentLesson
             papapay={prop.papapay}

@@ -18,7 +18,7 @@ class App extends Component  {
   constructor(props) {
     super(props)
     this.state = {
-      account: '',
+      //account: '',
       papaCount: 0,
       papas: [],
       loading: true,
@@ -30,8 +30,10 @@ class App extends Component  {
       // executed codes --> 0: no execution / 1: waiting execution / 2: successfull execution / 3: error
       crExe: 0,
       tuExe: 0,
-      stExe: 0
+      stExe: 0,
+      ethAccAddr: ''
     }
+    this.ethAccount = this.ethAccount.bind(this)
     this.isConnected = this.isConnected.bind(this)
     this.cleanExe = this.cleanExe.bind(this)
     this.cleanBlockchainData = this.cleanBlockchainData.bind(this)
@@ -54,6 +56,10 @@ class App extends Component  {
     }
   }
 
+  ethAccount = (y) => {
+    this.setState({ethAccAddr:y})
+  }
+
   cleanExe = () => {
     this.setState({ crExe: 0 })
     this.setState({ tuExe: 0 })
@@ -68,8 +74,8 @@ class App extends Component  {
   blockchainData = async () => {
     const web3 = new Web3(window.ethereum)
     // Load account
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    this.setState({ account: accounts[0] })
+    // const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    // this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = PapaPay.networks[networkId]
     if(networkData) {
@@ -102,7 +108,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaCreate(_papaDescConv, _papaPriceConv, _papaLessons, _papaLock, _papaStudent)
-      .send({ from: this.state.account })
+      .send({ from: this.state.ethAccAddr })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -123,7 +129,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaApprove(_papaCourse)
-      .send({ from: this.state.account, value: _price })
+      .send({ from: this.state.ethAccAddr, value: _price })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -144,7 +150,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaInitLesson(_papaCourse)
-      .send({ from: this.state.account })
+      .send({ from: this.state.ethAccAddr })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -165,7 +171,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaAttendLesson(_papaCourse)
-      .send({ from: this.state.account })
+      .send({ from: this.state.ethAccAddr })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -186,7 +192,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaWithdraw(_papaCourse)
-      .send({ from: this.state.account })
+      .send({ from: this.state.ethAccAddr })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -207,7 +213,7 @@ class App extends Component  {
     await this.setState({ loading: true })
     await this.state.papapay.methods
       .papaRecover(_papaCourse)
-      .send({ from: this.state.account })
+      .send({ from: this.state.ethAccAddr })
       .once('receipt', (receipt) => {
         this.setState({ receiptTx: receipt })
         this.setState({ errorMsg: null })
@@ -229,18 +235,19 @@ class App extends Component  {
     <ThemeProvider>
       <Web3ReactProvider getLibrary={getLibrary}>
           <Routes 
-            papas={this.state.papas}
-            papapay={this.state.papapay}
+            ethAccount={this.ethAccount}
             isConnected={this.isConnected}
             cleanExe={this.cleanExe}
             cleanBlockchainData={this.cleanBlockchainData}
             papaCreate={this.papaCreate}
             papaApprove={this.papaApprove}
-            papaAddress={this.state.papaAddress}
             papaInitLesson={this.papaInitLesson}
             papaAttendLesson={this.papaAttendLesson}
             papaWithdraw={this.papaWithdraw}
             papaRecover={this.papaRecover}
+            papas={this.state.papas}
+            papapay={this.state.papapay}
+            papaAddress={this.state.papaAddress}
             crExe={this.state.crExe}
             tuExe={this.state.tuExe}
             stExe={this.state.stExe}

@@ -1,4 +1,5 @@
-import React, {useEffect} from "react";
+import React, {useEffect, Fragment} from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button } from "@material-ui/core";
 import Center from "../components/Center";
 import BackButton from "../components/Back";
@@ -6,7 +7,7 @@ import { useWeb3React } from "@web3-react/core"
 import Web3 from 'web3';
 
 const tutorLesson = (props) => {
-
+  
   useEffect(() => props.cleanExe, []);
   useEffect(() => props.cleanBlockchainData, []);
 
@@ -53,25 +54,27 @@ const tutorLesson = (props) => {
                             <TableCell align="center">Lessons Qty.</TableCell>
                             <TableCell align="center">Timelock</TableCell>
                             <TableCell align="center">Student Address</TableCell>
+                            <TableCell align="center">Lessons given by teacher</TableCell>
+                            <TableCell align="center">Lessons attended by student</TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.papas.map((papa, key) => (
+                        {props.papas.map((papa) => (
                             account==papa.papaTutor
                             ?
                             <>
-                              <TableRow key={key}>
-                                <TableCell align="center" component="th" scope="row">
-                                    {papa.papaCourse.toString()}
-                                </TableCell>
+                              <TableRow key={uuidv4()}>
+                                <TableCell align="center" component="th" scope="row">{papa.papaCourse.toString()}</TableCell>
                                 <TableCell align="center">{cleanString(web3.utils.hexToAscii(papa.papaDesc))}</TableCell>
                                 <TableCell align="center">{web3.utils.fromWei(papa.papaPrice.toString(), 'Ether')} ETH</TableCell>
                                 <TableCell align="center">{web3.utils.fromWei(papa.papaBalance.toString(), 'Ether')} ETH</TableCell>
                                 <TableCell align="center">{papa.papaLessons} Lessons</TableCell>
                                 <TableCell align="center">{papa.papaLock} Minute(s)</TableCell>
                                 <TableCell align="center">{papa.papaStudent}</TableCell>
+                                <TableCell align="center">{papa.papaTutorSign}</TableCell>
+                                <TableCell align="center">{papa.papaStudentSign}</TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaTutorSign == papa.papaLessons || papa.papaTutorSign == papa.papaStudentSign} onClick={() => {props.papaInitLesson(papa.papaCourse)}}>Give Lesson</Button></TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaBalance==0} onClick={() => {props.papaWithdraw(papa.papaCourse)}}>Withdraw</Button></TableCell>
                               </TableRow>
@@ -104,7 +107,9 @@ const tutorLesson = (props) => {
                     return (
                       <div style={{
                         color: 'blue'
-                      }}>
+                      }}
+                      className="gradLoad"
+                      >
                       Transaction in progress...
                       </div>
                       )

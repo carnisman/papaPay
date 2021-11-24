@@ -37,6 +37,18 @@ const studentLesson = (props) => {
                 padding: "1rem 0"
                 }}>
                   Here you can take your lessons and recover any balance left in your unfinished course after the timelock period
+                  <br></br>
+                  Have in mind this checklist:
+                  <div style={{
+                    padding: "1rem 0",
+                    textAlign: "justify"
+                  }}>
+                  <li>The <i>Approve Lesson</i> button will withdraw from your wallet the value in Course Price. You cannot approve a course with balance, or a finished one</li>
+                  <li>The <i>Take Lesson</i> button will allow the teacher to start the lesson and to withdraw the proportional amount for that lesson</li>
+                  <li>You can recover the total balance after the timelock period with the <i>Recover Balance</i> button</li>
+                  <li>CAUTION: If you try to recover before the timelock, a exception will be generated!</li>
+                  <li>If any button is disabled, please review this checklist</li>
+                  </div>
         </h3>
         <BackButton/>
             <div
@@ -53,6 +65,8 @@ const studentLesson = (props) => {
                             <TableCell align="center">Lessons Qty.</TableCell>
                             <TableCell align="center">Timelock</TableCell>
                             <TableCell align="center">Tutor Address</TableCell>
+                            <TableCell align="center">Lessons given by teacher</TableCell>
+                            <TableCell align="center">Lessons attended by student</TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
@@ -73,6 +87,8 @@ const studentLesson = (props) => {
                                 <TableCell align="center">{papa.papaLessons} Lessons</TableCell>
                                 <TableCell align="center">{papa.papaLock} Minute(s)</TableCell>
                                 <TableCell align="center">{papa.papaTutor}</TableCell>
+                                <TableCell align="center">{papa.papaTutorSign}</TableCell>
+                                <TableCell align="center">{papa.papaStudentSign}</TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaBalance>0 || papa.papaTutorSign>0} onClick={() => {props.papaApprove(papa.papaCourse, papa.papaPrice)}}>Approve Course</Button></TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaTutorSign == papa.papaLessons || papa.papaStudentSign > papa.papaTutorSign || papa.papaBalance==0} onClick={() => {props.papaAttendLesson(papa.papaCourse)}}>Take Lesson</Button></TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaBalance==0} onClick={() => {props.papaRecover(papa.papaCourse)}}>Recover balance</Button></TableCell>
@@ -106,7 +122,9 @@ const studentLesson = (props) => {
                     return (
                       <div style={{
                         color: 'blue'
-                      }}>
+                      }}
+                      className="gradLoad"
+                      >
                       Transaction in progress...
                       </div>
                       )

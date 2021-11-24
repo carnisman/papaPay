@@ -144,7 +144,9 @@ const papaCreate = (props) => {
                     return (
                       <div style={{
                         color: 'blue'
-                      }}>
+                      }}
+                      className="gradLoad"
+                      >
                       Transaction in progress...
                       </div>
                       )

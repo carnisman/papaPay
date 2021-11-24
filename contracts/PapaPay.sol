@@ -148,8 +148,9 @@ contract PapaPay is ReentrancyGuard {
         require(msg.sender == papas[_papaCourse].papaStudent, "Not a student");
         require(papas[_papaCourse].papaBalance != 0,"Course has no balance");
         require(block.timestamp >= papas[_papaCourse].papaTS,"Timelock has not expired yet");
-        uint _recover = papas[_papaCourse].papaBalance;
-        papas[_papaCourse].papaBalance = 0;
+        uint papaRecAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
+        uint _recover = papas[_papaCourse].papaBalance - papaRecAmount;
+        papas[_papaCourse].papaBalance = papaRecAmount;
         (bool sent, ) = msg.sender.call{value: _recover}("");
         require(sent, "Failed to send Ether");
     }

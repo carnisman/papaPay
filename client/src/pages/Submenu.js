@@ -13,9 +13,14 @@ const Submenu = (props) => {
     props.isConnected(active)
   },[active]);
 
+  useEffect(() => {
+    props.ethAccount(account)
+  },[account]);
+
   async function connect() {
     try {
-      const response=await activate(injected)
+      //const response=await activate(injected)
+      await activate(injected)
     } catch (ex) {
       console.log(ex)
     }
@@ -41,7 +46,7 @@ const Submenu = (props) => {
       className="backpapa"
     >
     <div>
-          <h1 className="gradpapa">Welcome to PapaPay</h1>
+          <h1 className="gradpapa"><a href="/">Welcome to PapaPay</a></h1>
     </div>
     {active 
     ? 

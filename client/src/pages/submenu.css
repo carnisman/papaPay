@@ -34,6 +34,40 @@
     }
     }
 
+    .gradLoad {
+      align-self: center;
+      
+      background: linear-gradient(to left, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+      background-size: 200% auto;
+      
+      color: #000;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      
+      animation: shine 2s linear infinite;
+      -webkit-animation: shine 2s linear infinite;
+      -moz-animation: shine 2s linear infinite;
+  
+      }
+      
+      @-webkit-keyframes shine {
+        to {
+          background-position: 200% center;
+        }
+      }
+  
+      @-moz-keyframes shine {
+          to {
+            background-position: 200% center;
+          }
+        }
+      
+      @keyframes shine {
+      to {
+          background-position: 200% center;
+      }
+      }
  
 
   .backpapa {
