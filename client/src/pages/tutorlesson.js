@@ -58,12 +58,32 @@ const tutorLesson = (props) => {
                             <TableCell align="center">Lessons attended by student</TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
+                            <TableCell align="center"></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {props.papas.map((papa) => (
                             account==papa.papaTutor
                             ?
+                            (papa.papaBalance == 0 && papa.papaTutorSign > 0)
+                            ?
+                            <>
+                              <TableRow key={uuidv4()}>
+                                <TableCell align="center" component="th" scope="row">{papa.papaCourse.toString()}</TableCell>
+                                <TableCell align="center">{cleanString(web3.utils.hexToAscii(papa.papaDesc))}</TableCell>
+                                <TableCell align="center">{web3.utils.fromWei(papa.papaPrice.toString(), 'Ether')} ETH</TableCell>
+                                <TableCell align="center">{web3.utils.fromWei(papa.papaBalance.toString(), 'Ether')} ETH</TableCell>
+                                <TableCell align="center">{papa.papaLessons} Lessons</TableCell>
+                                <TableCell align="center">{papa.papaLock} Minute(s)</TableCell>
+                                <TableCell align="center">{papa.papaStudent}</TableCell>
+                                <TableCell align="center">{papa.papaTutorSign}</TableCell>
+                                <TableCell align="center">{papa.papaStudentSign}</TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center" style={{color:"#E73C7E"}}>COURSE FINISHED</TableCell>
+                                <TableCell align="center"></TableCell>
+                              </TableRow>
+                            </>
+                            :
                             <>
                               <TableRow key={uuidv4()}>
                                 <TableCell align="center" component="th" scope="row">{papa.papaCourse.toString()}</TableCell>
@@ -77,6 +97,7 @@ const tutorLesson = (props) => {
                                 <TableCell align="center">{papa.papaStudentSign}</TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaTutorSign == papa.papaLessons || papa.papaTutorSign == papa.papaStudentSign} onClick={() => {props.papaInitLesson(papa.papaCourse)}}>Give Lesson</Button></TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaBalance==0} onClick={() => {props.papaWithdraw(papa.papaCourse)}}>Withdraw</Button></TableCell>
+                                <TableCell align="center"></TableCell>
                               </TableRow>
                             </>
                             :
@@ -118,7 +139,7 @@ const tutorLesson = (props) => {
                     return (
                       <>
                       <div style={{
-                        color: 'green'
+                        color: '#23D5AB'
                       }}>
                       <div>
                       Transaction successful
@@ -140,7 +161,7 @@ const tutorLesson = (props) => {
                     return (
                       <>
                       <div style={{
-                        color: 'red'
+                        color: '#E73C7E'
                       }}>
                       <div>
                       <b>Transaction error!</b>
@@ -160,7 +181,7 @@ const tutorLesson = (props) => {
                     ?<div style={{
                         textAlign: "center",
                         padding: "1rem 0",
-                        color: "green"
+                        color: "#23D5AB"
                         }}>
                         Your wallet is connected, everything looks good!
                       </div>
@@ -168,7 +189,7 @@ const tutorLesson = (props) => {
                         textAlign: "center",
                         textTransform: "uppercase",
                         padding: "1rem 0",
-                        color: "red"
+                        color: "#E73C7E"
                         }}>
                         Please connect your wallet to continue !!
                       </div>}

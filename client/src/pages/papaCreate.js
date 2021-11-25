@@ -160,7 +160,7 @@ const papaCreate = (props) => {
                     return (
                       <>
                       <div style={{
-                        color: 'green'
+                        color: '#23D5AB'
                       }}>
                       <div>
                       Transaction successful
@@ -182,7 +182,7 @@ const papaCreate = (props) => {
                     return (
                       <>
                       <div style={{
-                        color: 'red'
+                        color: '#E73C7E'
                       }}>
                       <div>
                       <b>Transaction error!</b>
@@ -202,7 +202,7 @@ const papaCreate = (props) => {
                     ?<div style={{
                         textAlign: "center",
                         padding: "1rem 0",
-                        color: "green"
+                        color: "#23D5AB"
                         }}>
                         Your wallet is connected, everything looks good!
                       </div>
@@ -210,7 +210,7 @@ const papaCreate = (props) => {
                         textAlign: "center",
                         textTransform: "uppercase",
                         padding: "1rem 0",
-                        color: "red"
+                        color: "#E73C7E"
                         }}>
                         Please connect your wallet to continue !!
                       </div>}
