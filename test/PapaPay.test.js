@@ -9,7 +9,7 @@ contract("PapaPay", function (accounts) {
   
     const price = "1000";
     const excessAmount = "2000";
-    const papaDesc = "example course";
+    const papaDesc = "0x75d8ed4e519b70c350b46b2b3811ded16fda981e000000000000000000000000";
     const papaPrice = "1000";
     const papaLessons = "10";
     const papaLock = "10";
@@ -181,43 +181,53 @@ contract("PapaPay", function (accounts) {
             });
         });
     });
-  ///////////// ACA PARO POR HOY ///////////////////
+
     describe("Use cases", () => {
-      it("Should add a course with all its variables", async () => {
+      it("Should add a course with its parameters", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
-  
-        const result = await instance.fetchItem.call(0);
-  
+        const _papaCourse=0
+        const result = await instance.fetchCourse.call(_papaCourse);
+
         assert.equal(
           result[0],
+          _papaCourse,
+          "the description of the last added course does not match the expected value",
+        );
+        assert.equal(
+          result[1],
           papaDesc,
-          "the papaDesc of the last added item does not match the expected value",
+          "the description of the last added course does not match the expected value",
         );
         assert.equal(
           result[2].toString(10),
-          price,
-          "the price of the last added item does not match the expected value",
+          papaPrice,
+          "the price of the last added course does not match the expected value",
         );
         assert.equal(
           result[3].toString(10),
-          SupplyChain.State.ForSale,
-          'the state of the item should be "For Sale"',
+          papaLessons,
+          'the lessons of the last added course does not match the expected value',
         );
         assert.equal(
-          result[4],
+          result[4].toString(10),
+          papaLock,
+          'the timelock of the last added course does not match the expected value',
+        );
+        assert.equal(
+          result[5].toString(10),
           alice,
-          "the address adding the item should be listed as the seller",
+          'the tutor of the last added course does not match the expected value',
         );
         assert.equal(
-          result[5],
-          emptyAddress,
-          "the buyer address should be set to 0 when an item is added",
+          result[6].toString(10),
+          papaStudent,
+          'the student of the last added course does not match the expected value',
         );
       });
-  
+  /////////////////////
       it("should emit a LogForSale event when an item is added", async () => {
         let eventEmitted = false;
-        const tx = await instance.addItem(papaDesc, price, { from: alice });
+        const tx = await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
   
         if (tx.logs[0].event == "LogForSale") {
           eventEmitted = true;

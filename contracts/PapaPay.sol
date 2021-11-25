@@ -40,7 +40,7 @@ contract PapaPay is ReentrancyGuard {
 ///
 ///    EVENTS
 ///
-    event CourseCreated (uint papaCount, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent);
+    event CourseCreated (uint papaCourse, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent);
     event CourseDeposit (uint papaCourse, address papaStudent, uint papaBalance);
     event LessonStarted (uint papaCourse, address papaTutor, uint papaTutorSign);
     event LessonAttended (uint papaCourse, address papaStudent, uint papaStudentSign);
@@ -234,15 +234,16 @@ contract PapaPay is ReentrancyGuard {
 ///  A fallback here
     }
   /// TEST TEST TEST
-  // function fetchItem(uint _sku) public view
-  //    returns (string memory name, uint sku, uint price, uint state, address seller, address buyer)
-  //  {
-  //    name = items[_sku].name;
-  //    sku = items[_sku].sku;
-  //    price = items[_sku].price;
-  //    state = uint(items[_sku].state);
-  //    seller = items[_sku].seller;
-  //    buyer = items[_sku].buyer;
-  //    return (name, sku, price, state, seller, buyer);
-  //  }
+   function fetchCourse(uint _papaCourse) public view
+      returns (uint papaCourse, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent)
+    {
+        papaDesc = papas[_papaCourse].papaDesc;
+        papaCourse = papas[_papaCourse].papaCourse;
+        papaPrice = papas[_papaCourse].papaPrice;
+        papaLessons = papas[_papaCourse].papaLessons;
+        papaLock = papas[_papaCourse].papaLock;
+        papaTutor = papas[_papaCourse].papaTutor;
+        papaStudent = papas[_papaCourse].papaStudent;
+        return (papaCourse, papaDesc, papaPrice, papaLessons, papaLock, papaTutor, papaStudent);
+    }
 }
