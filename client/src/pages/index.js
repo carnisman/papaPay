@@ -12,7 +12,7 @@ const PapaWeb = () => {
               style={{
                 padding: "1rem 0"
                 }}>
-                  Welcome to PapaPay! Please select one option
+                  Welcome to PapaPay! Please, select one option
         </h1>
         <div
             style={{
