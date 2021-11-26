@@ -9,6 +9,7 @@ contract("PapaPay", function (accounts) {
   
     const price = "1000";
     const excessAmount = "2000";
+    const _papaCourse=0
     const papaDesc = "0x75d8ed4e519b70c350b46b2b3811ded16fda981e000000000000000000000000";
     const papaPrice = "1000";
     const papaLessons = "10";
@@ -185,7 +186,7 @@ contract("PapaPay", function (accounts) {
     describe("Use cases", () => {
       it("Should add a course with its parameters", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
-        const _papaCourse=0
+        
         const result = await instance.fetchCourse.call(_papaCourse);
 
         assert.equal(
@@ -224,30 +225,28 @@ contract("PapaPay", function (accounts) {
           'the student of the last added course does not match the expected value',
         );
       });
-  /////////////////////
-      it("should emit a LogForSale event when an item is added", async () => {
+
+      it("should emit a CourseCreated event when an course is added", async () => {
         let eventEmitted = false;
         const tx = await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
   
-        if (tx.logs[0].event == "LogForSale") {
+        if (tx.logs[0].event == "CourseCreated") {
           eventEmitted = true;
         }
   
         assert.equal(
           eventEmitted,
           true,
-          "adding an item should emit a For Sale event",
+          "adding an course should emit a CourseCreated event",
         );
       });
-  
+  ////////////////////////////////
       it("should allow someone to purchase an item and update state accordingly", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        var aliceBalanceBefore = await web3.eth.getBalance(alice);
+
         var bobBalanceBefore = await web3.eth.getBalance(bob);
-  
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-  
-        var aliceBalanceAfter = await web3.eth.getBalance(alice);
+
+        await instance.papaApprove(_papaCourse, { from: bob, value:price });
+
         var bobBalanceAfter = await web3.eth.getBalance(bob);
   
         const result = await instance.fetchItem.call(0);
