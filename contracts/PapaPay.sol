@@ -40,7 +40,7 @@ contract PapaPay is ReentrancyGuard {
 ///
 ///    EVENTS
 ///
-    event CourseCreated (uint papaCourse, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent);
+    event CourseCreated (uint papaCount, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent);
     event CourseDeposit (uint papaCourse, address papaStudent, uint papaBalance);
     event LessonStarted (uint papaCourse, address papaTutor, uint papaTutorSign);
     event LessonAttended (uint papaCourse, address papaStudent, uint papaStudentSign);
@@ -62,6 +62,11 @@ contract PapaPay is ReentrancyGuard {
 
     modifier notSame(address _papaStudent) {
         require(msg.sender != _papaStudent, "Student and teacher cannot be the same");
+        _;
+    }
+
+    modifier hasStudent(address _papaStudent){
+        require(_papaStudent!=address(0), "Student address cannot be empty");
         _;
     }
 
@@ -125,6 +130,13 @@ contract PapaPay is ReentrancyGuard {
         _;
     }
 
+    modifier studentCanWithdraw(uint _papaCourse){
+        uint papaTutorAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
+        uint recover = papas[_papaCourse].papaBalance - papaTutorAmount;
+        require(recover !=0,"Course has no balance left to recover");
+        _;
+    }
+
     modifier timelock(uint _papaCourse){
         require(block.timestamp >= papas[_papaCourse].papaTS,"Timelock has not expired yet");
         _;
@@ -140,6 +152,7 @@ contract PapaPay is ReentrancyGuard {
     notSame(_papaStudent)
     priceNotZero(_papaPrice)
     lessonsNotZero(_papaLessons)
+    hasStudent(_papaStudent)
     {
         papas[papaCount].papaDesc = _papaDesc;
         papas[papaCount].papaCourse = papaCount;
@@ -220,6 +233,7 @@ contract PapaPay is ReentrancyGuard {
     nonReentrant
     isStudent(_papaCourse)
     hasBalance(_papaCourse)
+    studentCanWithdraw(_papaCourse)
     timelock(_papaCourse)
     {
         uint papaTutorAmount = (papas[_papaCourse].papaPrice / papas[_papaCourse].papaLessons) * (papas[_papaCourse].papaTutorSign - papas[_papaCourse].papaWithdrew);
