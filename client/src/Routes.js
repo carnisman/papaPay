@@ -29,6 +29,8 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
+              walDisabler={prop.walDisabler}
+              walEnabler={prop.walEnabler}
             />
             <Tutor/>
           </>} />
@@ -38,6 +40,8 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
+            walDisabler={prop.walDisabler}
+            walEnabler={prop.walEnabler}
           />
           <CreateCourse
             papapay={prop.papapay}
@@ -56,6 +60,8 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
+            walDisabler={prop.walDisabler}
+            walEnabler={prop.walEnabler}
           />
           <TutorLesson
             papas={prop.papas}
@@ -75,6 +81,8 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
+            walDisabler={prop.walDisabler}
+            walEnabler={prop.walEnabler}
           />
           <StudentLesson
             papapay={prop.papapay}
