@@ -249,7 +249,7 @@ contract PapaPay is ReentrancyGuard {
     }
   /// TEST TEST TEST
    function fetchCourse(uint _papaCourse) public view
-      returns (uint papaCourse, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent)
+      returns (uint papaCourse, bytes32 papaDesc, uint papaPrice, uint papaLessons, uint papaLock, address papaTutor, address papaStudent, uint papaBalance)
     {
         papaDesc = papas[_papaCourse].papaDesc;
         papaCourse = papas[_papaCourse].papaCourse;
@@ -258,6 +258,7 @@ contract PapaPay is ReentrancyGuard {
         papaLock = papas[_papaCourse].papaLock;
         papaTutor = papas[_papaCourse].papaTutor;
         papaStudent = papas[_papaCourse].papaStudent;
-        return (papaCourse, papaDesc, papaPrice, papaLessons, papaLock, papaTutor, papaStudent);
+        papaBalance = papas[_papaCourse].papaBalance;
+        return (papaCourse, papaDesc, papaPrice, papaLessons, papaLock, papaTutor, papaStudent, papaBalance);
     }
 }

@@ -9,6 +9,7 @@ contract("PapaPay", function (accounts) {
   
     const price = "1000";
     const excessAmount = "2000";
+    const lessAmount = "500";
     const _papaCourse=0
     const papaDesc = "0x75d8ed4e519b70c350b46b2b3811ded16fda981e000000000000000000000000";
     const papaPrice = "1000";
@@ -241,44 +242,30 @@ contract("PapaPay", function (accounts) {
         );
       });
   ////////////////////////////////
-      it("should allow someone to purchase an item and update state accordingly", async () => {
 
-        var bobBalanceBefore = await web3.eth.getBalance(bob);
+      it("should allow the student to approve a course and update balance accordingly", async () => {
 
-        await instance.papaApprove(_papaCourse, { from: bob, value:price });
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
 
-        var bobBalanceAfter = await web3.eth.getBalance(bob);
-  
-        const result = await instance.fetchItem.call(0);
-  
+        const result = await instance.fetchCourse.call(_papaCourse);
+
         assert.equal(
-          result[3].toString(10),
-          SupplyChain.State.Sold,
-          'the state of the item should be "Sold"',
-        );
-  
-        assert.equal(
-          result[5],
-          bob,
-          "the buyer address should be set bob when he purchases an item",
-        );
-  
-        assert.equal(
-          new BN(aliceBalanceAfter).toString(),
-          new BN(aliceBalanceBefore).add(new BN(price)).toString(),
-          "alice's balance should be increased by the price of the item",
-        );
-  
-        assert.isBelow(
-          Number(bobBalanceAfter),
-          Number(new BN(bobBalanceBefore).sub(new BN(price))),
-          "bob's balance should be reduced by more than the price of the item (including gas costs)",
-        );
+          result[7].toString(10),
+          papaPrice,
+          'the the balance should match the price',
+        ); 
+
       });
   
       it("should error when not enough value is sent when purchasing an item", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        await catchRevert(instance.buyItem(0, { from: bob, value: 1 }));
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await catchRevert(instance.papaApprove(_papaCourse, { from: bob, value:lessAmount }));
+      });
+
+      it("should error when not enough value is sent when purchasing an item", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await catchRevert(instance.papaApprove(_papaCourse, { from: bob, value:excessAmount }));
       });
   
       it("should emit LogSold event when and item is purchased", async () => {
