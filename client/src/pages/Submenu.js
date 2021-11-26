@@ -8,7 +8,6 @@ import "./submenu.css"
 const Submenu = (props) => {
   const { theme } = useContext(ThemeContext);
   const { active, account, activate, deactivate } = useWeb3React()
-
   useEffect(() => {
     props.isConnected(active)
   },[active]);
@@ -17,10 +16,16 @@ const Submenu = (props) => {
     props.ethAccount(account)
   },[account]);
 
+  useEffect(() => {
+    if(props.walDisabler == false){
+      disconnect()
+    } 
+  },[props.walDisabler]);
+
   async function connect() {
     try {
-      //const response=await activate(injected)
       await activate(injected)
+      props.walEnabler()
     } catch (ex) {
       console.log(ex)
     }

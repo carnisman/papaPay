@@ -1,6 +1,6 @@
 {
-  "short_name": "Ineco Antares",
-  "name": "Ineco Antares - Actividades",
+  "short_name": "PapaPay",
+  "name": "PapaPay - Tutor & Student Payment System - web3 powered!",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/frontend/actividades",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

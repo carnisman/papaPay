@@ -1,7 +1,7 @@
 exports.themes = [
 
     {
-        name: 'inecoWhite',
+        name: 'White',
 
         primary: '#cacaca',
         secondary: '#cacaca',
@@ -23,7 +23,7 @@ exports.themes = [
     },
 
     { 
-        name: 'inecoBlack',
+        name: 'Black',
 
         primary: '#b71b54',
         secondary: '#fff',
@@ -45,7 +45,7 @@ exports.themes = [
     },
 
     { 
-        name: 'unifi-black',
+        name: 'fifiblack',
 
         primary: '#007aff',
         secondary: '#fff',

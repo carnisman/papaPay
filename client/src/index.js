@@ -31,12 +31,14 @@ class App extends Component  {
       crExe: 0,
       tuExe: 0,
       stExe: 0,
-      ethAccAddr: ''
+      ethAccAddr: '',
+      walDisabler: false
     }
     this.ethAccount = this.ethAccount.bind(this)
     this.isConnected = this.isConnected.bind(this)
     this.cleanExe = this.cleanExe.bind(this)
     this.cleanBlockchainData = this.cleanBlockchainData.bind(this)
+    this.walEnabler = this.walEnabler.bind(this)
     this.papaCreate = this.papaCreate.bind(this)
     this.papaApprove = this.papaApprove.bind(this)
     this.papaInitLesson = this.papaInitLesson.bind(this)
@@ -53,11 +55,17 @@ class App extends Component  {
     } else { 
       this.setState({ papapay:null })
       this.setState({ papas:[] })
+      this.setState({ papaAddress:'' })
+      this.setState({ ethAccAddr: '' })
     }
   }
 
+  walEnabler = () => {
+    this.setState({ walDisabler: true })
+  }
+
   ethAccount = (y) => {
-    this.setState({ethAccAddr:y})
+    this.setState({ ethAccAddr: y })
   }
 
   cleanExe = () => {
@@ -73,9 +81,6 @@ class App extends Component  {
 
   blockchainData = async () => {
     const web3 = new Web3(window.ethereum)
-    // Load account
-    // const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    // this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = PapaPay.networks[networkId]
     if(networkData) {
@@ -97,6 +102,8 @@ class App extends Component  {
       this.setState({ loading: false})
     } else {
         window.alert('PapaPay contract not deployed to detected network.')
+        this.isConnected(false)
+        this.setState({walDisabler: false})
     }
   }
 
@@ -245,6 +252,7 @@ class App extends Component  {
             papaAttendLesson={this.papaAttendLesson}
             papaWithdraw={this.papaWithdraw}
             papaRecover={this.papaRecover}
+            walEnabler={this.walEnabler}
             papas={this.state.papas}
             papapay={this.state.papapay}
             papaAddress={this.state.papaAddress}
@@ -253,6 +261,7 @@ class App extends Component  {
             stExe={this.state.stExe}
             errorMsg={this.state.errorMsg}
             receiptTx={this.state.receiptTx}
+            walDisabler={this.state.walDisabler}
           />
       </Web3ReactProvider>
     </ThemeProvider>

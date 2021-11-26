@@ -18,6 +18,8 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
+              walDisabler={prop.walDisabler}
+              walEnabler={prop.walEnabler}
             />
             <PapaWeb/>
           </>} />
