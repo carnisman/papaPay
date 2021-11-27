@@ -21,8 +21,8 @@ const Submenu = (props) => {
   useEffect(() => {
     if (active) {
       window.ethereum.on('chainChanged', async function pepe()  {
-        const currentChain = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
-        if (currentChain != 3) 
+        const currentChain = await window.ethereum.request({ method: 'eth_chainId' })
+        if (currentChain != props.myNetwork) 
         {
           await disconnect()
         } 

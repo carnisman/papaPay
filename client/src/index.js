@@ -13,10 +13,13 @@ function getLibrary(provider) {
 
 class App extends Component  {
 
+  
+
   constructor(props) {
     super(props)
     this.state = {
-      //account: '',
+      // Change the value of myNetwork value to your preferred network
+      myNetwork: "0x3",
       papaCount: 0,
       papas: [],
       loading: true,
@@ -76,7 +79,7 @@ class App extends Component  {
     if (window.ethereum) {
       this.cleanBlockchainData()
       try {
-          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x3' }], });
+          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: this.state.myNetwork }], });
         
           const chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
           const networkData = PapaPay.networks[chainId]
@@ -267,6 +270,7 @@ class App extends Component  {
               papaAttendLesson={this.papaAttendLesson}
               papaWithdraw={this.papaWithdraw}
               papaRecover={this.papaRecover}
+              myNetwork={this.state.myNetwork}
               papas={this.state.papas}
               papapay={this.state.papapay}
               papaAddress={this.state.papaAddress}
