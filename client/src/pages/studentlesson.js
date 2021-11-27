@@ -43,7 +43,8 @@ const studentLesson = (props) => {
                     textAlign: "justify"
                   }}>
                   <li>The <i>Approve Lesson</i> button will withdraw from your wallet the value in Course Price. You cannot approve a course with balance, or a finished one</li>
-                  <li>The <i>Take Lesson</i> button will allow the teacher to start the lesson and to withdraw the proportional amount for that lesson</li>
+                  <li>To take a lesson you must first clic on the <i>Take Lesson</i> button</li>
+                  <li>After you clic the <i>Take Lesson</i> button, teacher will be allowed to start the lesson and after that, withdraw the proportional amount for that lesson</li>
                   <li>You can recover the total balance after the timelock period with the <i>Recover Balance</i> button</li>
                   <li>CAUTION: If you try to recover before the timelock, a exception will be generated!</li>
                   <li>If any button is disabled, please review this checklist</li>

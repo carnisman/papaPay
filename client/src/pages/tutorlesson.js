@@ -37,6 +37,17 @@ const tutorLesson = (props) => {
                 padding: "1rem 0"
                 }}>
                   Here you can give your lessons and withdraw any balance available to you
+                  <br></br>
+                  Have in mind this checklist:
+                  <div style={{
+                    padding: "1rem 0",
+                    textAlign: "justify"
+                  }}>
+                  <li>You can give the lesson after the student attends it. To attend the lesson the student must clic the <i>Take lesson</i> button</li>
+                  <li>You can withdraw your available balance after giving a lesson. To give a lesson you must clic the <i>Give Lesson</i> button</li>
+                  <li>The can withdraw every time you give a lesson or multiple lessons given</li>
+                  <li>If any button is disabled, please review this checklist</li>
+                  </div>
         </h3>
         <BackButton/>
             <div
