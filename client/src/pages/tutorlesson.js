@@ -9,7 +9,6 @@ import Web3 from 'web3';
 const tutorLesson = (props) => {
   
   useEffect(() => props.cleanExe, []);
-  useEffect(() => props.cleanBlockchainData, []);
 
   const web3 = new Web3(window.ethereum)
   const { account } = useWeb3React()
@@ -56,6 +55,7 @@ const tutorLesson = (props) => {
                             <TableCell align="center">Student Address</TableCell>
                             <TableCell align="center">Lessons given by teacher</TableCell>
                             <TableCell align="center">Lessons attended by student</TableCell>
+                            <TableCell align="center">Withdrawals</TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center"></TableCell>
@@ -78,6 +78,7 @@ const tutorLesson = (props) => {
                                 <TableCell align="center">{papa.papaStudent}</TableCell>
                                 <TableCell align="center">{papa.papaTutorSign}</TableCell>
                                 <TableCell align="center">{papa.papaStudentSign}</TableCell>
+                                <TableCell align="center">{papa.papaWithdrew}</TableCell>
                                 <TableCell align="center"></TableCell>
                                 <TableCell align="center" style={{color:"#E73C7E"}}>COURSE FINISHED</TableCell>
                                 <TableCell align="center"></TableCell>
@@ -95,8 +96,9 @@ const tutorLesson = (props) => {
                                 <TableCell align="center">{papa.papaStudent}</TableCell>
                                 <TableCell align="center">{papa.papaTutorSign}</TableCell>
                                 <TableCell align="center">{papa.papaStudentSign}</TableCell>
+                                <TableCell align="center">{papa.papaWithdrew}</TableCell>
                                 <TableCell align="center" ><Button disabled={papa.papaTutorSign == papa.papaLessons || papa.papaTutorSign == papa.papaStudentSign} onClick={() => {props.papaInitLesson(papa.papaCourse)}}>Give Lesson</Button></TableCell>
-                                <TableCell align="center" ><Button disabled={papa.papaBalance==0} onClick={() => {props.papaWithdraw(papa.papaCourse)}}>Withdraw</Button></TableCell>
+                                <TableCell align="center" ><Button disabled={papa.papaBalance==0 || (papa.papaTutorSign==papa.papaWithdrew )} onClick={() => {props.papaWithdraw(papa.papaCourse)}}>Withdraw</Button></TableCell>
                                 <TableCell align="center"></TableCell>
                               </TableRow>
                             </>

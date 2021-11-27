@@ -11,8 +11,6 @@ function getLibrary(provider) {
   return new Web3(provider)
 }
 
-
-
 class App extends Component  {
 
   constructor(props) {
@@ -31,14 +29,12 @@ class App extends Component  {
       crExe: 0,
       tuExe: 0,
       stExe: 0,
-      ethAccAddr: '',
-      walDisabler: false
+      ethAccAddr: ''
     }
     this.ethAccount = this.ethAccount.bind(this)
     this.isConnected = this.isConnected.bind(this)
     this.cleanExe = this.cleanExe.bind(this)
     this.cleanBlockchainData = this.cleanBlockchainData.bind(this)
-    this.walEnabler = this.walEnabler.bind(this)
     this.papaCreate = this.papaCreate.bind(this)
     this.papaApprove = this.papaApprove.bind(this)
     this.papaInitLesson = this.papaInitLesson.bind(this)
@@ -60,10 +56,6 @@ class App extends Component  {
     }
   }
 
-  walEnabler = () => {
-    this.setState({ walDisabler: true })
-  }
-
   ethAccount = (y) => {
     this.setState({ ethAccAddr: y })
   }
@@ -81,30 +73,53 @@ class App extends Component  {
 
   blockchainData = async () => {
     const web3 = new Web3(window.ethereum)
-    const networkId = await web3.eth.net.getId()
-    const networkData = PapaPay.networks[networkId]
-    if(networkData) {
-      const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
-      this.setState({ papapay })
-      const papaCount = await papapay.methods
-        .papaCount()
-        .call()
-      const papaAddress = await papapay._address
-      this.setState({ papaAddress })
-      this.setState({ papaCount })
-      // Load courses
-      for (var i = 0; i < papaCount; i++) {
-        const papa = await papapay.methods
-          .papas(i)
-          .call()
-        this.setState({ papas: [...this.state.papas, papa] })
+    if (window.ethereum) {
+      this.cleanBlockchainData()
+      try {
+          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x3' }], });
+        
+          const chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
+          const networkData = PapaPay.networks[chainId]
+
+          if(networkData) {
+            this.cleanExe()
+            const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
+            this.setState({ papapay })
+            const papaCount = await papapay.methods
+              .papaCount()
+              .call()
+            const papaAddress = await papapay._address
+            this.setState({ papaAddress })
+            this.setState({ papaCount })
+            // Load courses
+            for (var i = 0; i < papaCount; i++) {
+              const papa = await papapay.methods
+                .papas(i)
+                .call()
+              this.setState({ papas: [...this.state.papas, papa] })
+            }
+            this.setState({ loading: false})
+          } 
+          else {
+              this.cleanBlockchainData()
+              this.setState({ errorMsg: "PapaPay isn´t deployed on this network, please, check MetaMask, use Ropsten or a local network accordingly" })
+              this.setState({ crExe: 3 })
+              this.setState({ tuExe: 3 })
+              this.setState({ stExe: 3 })
+            }
+      } catch (error) {
+              this.cleanBlockchainData()
+              this.setState({ errorMsg: error.message })
+              this.setState({ crExe: 3 })
+              this.setState({ tuExe: 3 })
+              this.setState({ stExe: 3 })
       }
-      this.setState({ loading: false})
+
     } else {
-        window.alert('PapaPay contract not deployed to detected network.')
-        this.isConnected(false)
-        this.setState({walDisabler: false})
-    }
+      
+      alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
+    } 
+
   }
 
   async papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
@@ -240,30 +255,28 @@ class App extends Component  {
   render () {
      return (
     <ThemeProvider>
-      <Web3ReactProvider getLibrary={getLibrary}>
-          <Routes 
-            ethAccount={this.ethAccount}
-            isConnected={this.isConnected}
-            cleanExe={this.cleanExe}
-            cleanBlockchainData={this.cleanBlockchainData}
-            papaCreate={this.papaCreate}
-            papaApprove={this.papaApprove}
-            papaInitLesson={this.papaInitLesson}
-            papaAttendLesson={this.papaAttendLesson}
-            papaWithdraw={this.papaWithdraw}
-            papaRecover={this.papaRecover}
-            walEnabler={this.walEnabler}
-            papas={this.state.papas}
-            papapay={this.state.papapay}
-            papaAddress={this.state.papaAddress}
-            crExe={this.state.crExe}
-            tuExe={this.state.tuExe}
-            stExe={this.state.stExe}
-            errorMsg={this.state.errorMsg}
-            receiptTx={this.state.receiptTx}
-            walDisabler={this.state.walDisabler}
-          />
-      </Web3ReactProvider>
+        <Web3ReactProvider getLibrary={getLibrary}>
+            <Routes 
+              ethAccount={this.ethAccount}
+              isConnected={this.isConnected}
+              cleanExe={this.cleanExe}
+              cleanBlockchainData={this.cleanBlockchainData}
+              papaCreate={this.papaCreate}
+              papaApprove={this.papaApprove}
+              papaInitLesson={this.papaInitLesson}
+              papaAttendLesson={this.papaAttendLesson}
+              papaWithdraw={this.papaWithdraw}
+              papaRecover={this.papaRecover}
+              papas={this.state.papas}
+              papapay={this.state.papapay}
+              papaAddress={this.state.papaAddress}
+              crExe={this.state.crExe}
+              tuExe={this.state.tuExe}
+              stExe={this.state.stExe}
+              errorMsg={this.state.errorMsg}
+              receiptTx={this.state.receiptTx}
+            />
+        </Web3ReactProvider>
     </ThemeProvider>
   );
   }

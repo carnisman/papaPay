@@ -18,8 +18,6 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
-              walDisabler={prop.walDisabler}
-              walEnabler={prop.walEnabler}
             />
             <PapaWeb/>
           </>} />
@@ -29,8 +27,6 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
-              walDisabler={prop.walDisabler}
-              walEnabler={prop.walEnabler}
             />
             <Tutor/>
           </>} />
@@ -40,14 +36,12 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            walDisabler={prop.walDisabler}
-            walEnabler={prop.walEnabler}
           />
           <CreateCourse
             papapay={prop.papapay}
             papaCreate={prop.papaCreate}
             cleanExe={prop.cleanExe}
-            cleanBlochainData={prop.cleanBlochainData}
+            cleanBlockchainData={prop.cleanBlockchainData}
             papaAddress={prop.papaAddress}
             receiptTx={prop.receiptTx}
             errorMsg={prop.errorMsg}
@@ -60,14 +54,12 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            walDisabler={prop.walDisabler}
-            walEnabler={prop.walEnabler}
           />
           <TutorLesson
             papas={prop.papas}
             papapay={prop.papapay}
             cleanExe={prop.cleanExe}
-            cleanBlochainData={prop.cleanBlochainData}
+            cleanBlockchainData={prop.cleanBlockchainData}
             papaInitLesson={prop.papaInitLesson}
             papaWithdraw={prop.papaWithdraw}
             receiptTx={prop.receiptTx}
@@ -81,14 +73,12 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            walDisabler={prop.walDisabler}
-            walEnabler={prop.walEnabler}
           />
           <StudentLesson
             papapay={prop.papapay}
             papas={prop.papas}
             cleanExe={prop.cleanExe}
-            cleanBlochainData={prop.cleanBlochainData}
+            cleanBlockchainData={prop.cleanBlockchainData}
             papaApprove={prop.papaApprove}
             papaAttendLesson={prop.papaAttendLesson}
             papaRecover={prop.papaRecover}

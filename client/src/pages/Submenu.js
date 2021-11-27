@@ -6,8 +6,10 @@ import { Button } from "@material-ui/core";
 import "./submenu.css"
 
 const Submenu = (props) => {
+
   const { theme } = useContext(ThemeContext);
   const { active, account, activate, deactivate } = useWeb3React()
+
   useEffect(() => {
     props.isConnected(active)
   },[active]);
@@ -17,15 +19,21 @@ const Submenu = (props) => {
   },[account]);
 
   useEffect(() => {
-    if(props.walDisabler == false){
-      disconnect()
-    } 
-  },[props.walDisabler]);
+    if (active) {
+      window.ethereum.on('chainChanged', async function pepe()  {
+        const currentChain = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
+        if (currentChain != 3) 
+        {
+          await disconnect()
+        } 
+      })
+    }
+  });
+
 
   async function connect() {
     try {
-      await activate(injected)
-      props.walEnabler()
+      setTimeout( async () => await activate(injected), 500)
     } catch (ex) {
       console.log(ex)
     }
