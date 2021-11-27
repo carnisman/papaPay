@@ -13,8 +13,8 @@ contract("PapaPay", function (accounts) {
     const _papaCourse=0
     const papaDesc = "0x75d8ed4e519b70c350b46b2b3811ded16fda981e000000000000000000000000";
     const papaPrice = "1000";
-    const papaLessons = "10";
-    const papaLock = "10";
+    const papaLessons = "1";
+    const papaLock = "0";
     const papaStudent = bob;
   
     let instance;
@@ -185,6 +185,10 @@ contract("PapaPay", function (accounts) {
     });
 
     describe("Use cases", () => {
+
+      describe("Course creation tests", () => {
+
+
       it("Should add a course with its parameters", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
         
@@ -241,8 +245,28 @@ contract("PapaPay", function (accounts) {
           "adding an course should emit a CourseCreated event",
         );
       });
-  ////////////////////////////////
 
+      it("should error when tutor and student are the same", async () => {
+        await catchRevert(instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,alice, { from: alice }));
+      });
+
+      it("should error when lessons are 0", async () => {
+        await catchRevert(instance.papaCreate(papaDesc,papaPrice,0,papaLock,papaStudent, { from: alice }));
+      });
+
+      it("should error when price is 0", async () => {
+        await catchRevert(instance.papaCreate(papaDesc,0,papaLessons,papaLock,papaStudent, { from: alice }));
+      });
+
+      it("should error when student is not set", async () => {
+        await catchRevert(instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,emptyAddress, { from: alice }));
+      });
+
+    });
+
+    describe("Course approval tests", () => {
+
+  
       it("should allow the student to approve a course and update balance accordingly", async () => {
 
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -257,110 +281,264 @@ contract("PapaPay", function (accounts) {
         ); 
 
       });
+
+      it("should emit CourseDeposit event when course is approved", async () => {
+        var eventEmitted = false;
+        
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        const tx = await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+
+        if (tx.logs[0].event == "CourseDeposit") {
+          eventEmitted = true;
+        }
   
-      it("should error when not enough value is sent when purchasing an item", async () => {
+        assert.equal(eventEmitted, true, "approving course should emit CourseDeposit");
+      });
+      
+      it("should error when a tutor tries to approve course", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await catchRevert(instance.papaApprove(_papaCourse, { from: alice, value:papaPrice }));
+      });
+
+      it("should error when not enough value is sent when approving course", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
         await catchRevert(instance.papaApprove(_papaCourse, { from: bob, value:lessAmount }));
       });
 
-      it("should error when not enough value is sent when purchasing an item", async () => {
+      it("should error when excess value is sent when approving course", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
         await catchRevert(instance.papaApprove(_papaCourse, { from: bob, value:excessAmount }));
       });
   
-      it("should emit LogSold event when and item is purchased", async () => {
-        var eventEmitted = false;
-  
-        await instance.addItem(papaDesc, price, { from: alice });
-        const tx = await instance.buyItem(0, { from: bob, value: excessAmount });
-  
-        if (tx.logs[0].event == "LogSold") {
-          eventEmitted = true;
-        }
-  
-        assert.equal(eventEmitted, true, "adding an item should emit a Sold event");
-      });
-  
-      it("should revert when someone that is not the seller tries to call shipItem()", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: price });
-        await catchRevert(instance.shipItem(0, { from: bob }));
-      });
-  
-      it("should allow the seller to mark the item as shipped", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-        await instance.shipItem(0, { from: alice });
-  
-        const result = await instance.fetchItem.call(0);
-  
-        assert.equal(
-          result[3].toString(10),
-          SupplyChain.State.Shipped,
-          'the state of the item should be "Shipped"',
-        );
-      });
-  
-      it("should emit a LogShipped event when an item is shipped", async () => {
-        var eventEmitted = false;
-  
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-        const tx = await instance.shipItem(0, { from: alice });
-  
-        if (tx.logs[0].event == "LogShipped") {
-          eventEmitted = true;
-        }
-  
-        assert.equal(
-          eventEmitted,
-          true,
-          "adding an item should emit a Shipped event",
-        );
-      });
-  
-      it("should allow the buyer to mark the item as received", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-        await instance.shipItem(0, { from: alice });
-        await instance.receiveItem(0, { from: bob });
-  
-        const result = await instance.fetchItem.call(0);
-  
-        assert.equal(
-          result[3].toString(10),
-          SupplyChain.State.Received,
-          'the state of the item should be "Received"',
-        );
-      });
-  
-      it("should revert if an address other than the buyer calls receiveItem()", async () => {
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-        await instance.shipItem(0, { from: alice });
-  
-        await catchRevert(instance.receiveItem(0, { from: alice }));
-      });
-  
-      it("should emit a LogReceived event when an item is received", async () => {
-        var eventEmitted = false;
-  
-        await instance.addItem(papaDesc, price, { from: alice });
-        await instance.buyItem(0, { from: bob, value: excessAmount });
-        await instance.shipItem(0, { from: alice });
-        const tx = await instance.receiveItem(0, { from: bob });
-  
-        if (tx.logs[0].event == "LogReceived") {
-          eventEmitted = true;
-        }
-  
-        assert.equal(
-          eventEmitted,
-          true,
-          "adding an item should emit a Shipped event",
-        );
-      });
-  
     });
+
+    describe("Lesson attendance tests", () => {
+
+      /// Student side
+
+      it("should allow the student to attend a lesson and update student attendance counter", async () => {
+
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        
+        const result = await instance.fetchCourse.call(_papaCourse);
+
+        assert.equal(
+          result[9].toString(10),
+          "1",
+          'the student must have 1 lesson attended',
+        ); 
+
+      });
+
+      it("should emit LessonAttended event when lesson is attended", async () => {
+        var eventEmitted = false;
+        
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        const tx = await instance.papaAttendLesson(_papaCourse, { from: bob });
+
+        if (tx.logs[0].event == "LessonAttended") {
+          eventEmitted = true;
+        }
   
+        assert.equal(eventEmitted, true, "attending lesson should emit LessonAttended");
+      });
+    
+      it("should error when a tutor tries to attend lesson", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await catchRevert(instance.papaAttendLesson(_papaCourse, { from: alice }));
+      });
+
+      it("should error when a student tries to attend a lesson two times without tutor initting the first lesson", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        await catchRevert(instance.papaAttendLesson(_papaCourse, { from: bob }));
+      });
+
+    });
+
+    describe("Lesson init tests", () => {
+      /// Tutor side
+
+      it("should allow the tutor to init a lessons and update tutor init counter", async () => {
+
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        await instance.papaInitLesson(_papaCourse, { from: alice });
+        
+        const result = await instance.fetchCourse.call(_papaCourse);
+
+        assert.equal(
+          result[8].toString(10),
+          "1",
+          'the tutor must have 1 lesson attended',
+        );
+
+      });
+
+      it("should emit LessonStarted event when lessons is started", async () => {
+        var eventEmitted = false;
+        
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        const tx = await instance.papaInitLesson(_papaCourse, { from: alice });
+
+        if (tx.logs[0].event == "LessonStarted") {
+          eventEmitted = true;
+        }
+  
+        assert.equal(eventEmitted, true, "initializing lessons should emit LessonStarted");
+      }); 
+
+      it("should error when a tutor tries to init lessons without a student attending it", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await catchRevert(instance.papaInitLesson(_papaCourse, { from: alice }));
+      });
+
+      it("should error when a student tries to init lessons", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        await catchRevert(instance.papaInitLesson(_papaCourse, { from: bob }));
+      });
+
+      it("should error when a tutor tries to init lessons without a student attending it", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await catchRevert(instance.papaInitLesson(_papaCourse, { from: alice }));
+      });
+
+    });
+
+    describe("One more lesson exception test", () => {
+
+      it("should error when a student tries to attend lessons with all lessons taken", async () => {
+        await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
+        await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+        await instance.papaAttendLesson(_papaCourse, { from: bob });
+        await instance.papaInitLesson(_papaCourse, { from: alice });
+        await catchRevert(instance.papaAttendLesson(_papaCourse, { from: bob }));
+      });
+
+
+    });
+      /// Course withdrawal and recovery tests
+      describe("Withdrawal and recovery tests", () => {
+        /// we are increasing the amount to two lessons
+        const papa2Lessons = 2
+        /// defining the individual lesson value
+        const lessonAmount = papaPrice / papa2Lessons
+
+        it("should allow tutor to withdraw the equivalent to one lesson after that lesson is given", async () => {
+          
+          await instance.papaCreate(papaDesc,papaPrice,papa2Lessons,papaLock,papaStudent, { from: alice });
+          await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+          const preresult = await instance.fetchCourse.call(_papaCourse);
+          const originalBalance =  parseInt(preresult[7].toString(10),10)
+          await instance.papaAttendLesson(_papaCourse, { from: bob });
+          await instance.papaInitLesson(_papaCourse, { from: alice });
+          await instance.papaWithdraw(_papaCourse, { from: alice });
+          const result = await instance.fetchCourse.call(_papaCourse);
+          const newBalance =  parseInt(result[7].toString(10),10)
+          // defining the withdraw amount, wich is the total amount of lessons given, in this case one lesson
+          const withdrawValue =  lessonAmount * 1
+          const compBalance = newBalance + withdrawValue
+          
+  
+          assert.equal(
+            compBalance,
+            originalBalance,
+            'there is a mistmach between the balance withdrawed and the amount that has to be withdrawn',
+          );
+        });
+
+        it("should allow student to recover remaining balance without any lesson given", async () => {
+          
+          await instance.papaCreate(papaDesc,papaPrice,papa2Lessons,papaLock,papaStudent, { from: alice });
+          await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+          const preresult = await instance.fetchCourse.call(_papaCourse);
+          const originalBalance =  parseInt(preresult[7].toString(10),10)
+          await instance.papaAttendLesson(_papaCourse, { from: bob });
+          await instance.papaRecover(_papaCourse, { from: bob });
+          const result = await instance.fetchCourse.call(_papaCourse);
+          const newBalance =  parseInt(result[7].toString(10),10)
+          // defining the recover amount, in this case is the total balance, so we use papaPrice const
+          let recoverValue =  papaPrice
+          let compBalance = newBalance + recoverValue
+          
+  
+          assert.equal(
+            compBalance,
+            originalBalance,
+            'there is a mistmach between the balance recovered and the amount that has to be recovered',
+          );
+        });
+
+        it("should allow student to recover remaining balance after lesson given", async () => {
+          
+          await instance.papaCreate(papaDesc,papaPrice,papa2Lessons,papaLock,papaStudent, { from: alice });
+          await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+          const preresult = await instance.fetchCourse.call(_papaCourse);
+          const originalBalance =  parseInt(preresult[7].toString(10),10)
+          await instance.papaAttendLesson(_papaCourse, { from: bob });
+          await instance.papaInitLesson(_papaCourse, { from: alice });
+          await instance.papaRecover(_papaCourse, { from: bob });
+          const result = await instance.fetchCourse.call(_papaCourse);
+          const newBalance =  parseInt(result[7].toString(10),10)
+          // defining the recover amount, wich is equivalent to balance minus lessons given
+          let withdrawValue =  lessonAmount * 1
+          let recoverValue = originalBalance - withdrawValue
+          let compBalance = newBalance + recoverValue
+          
+  
+          assert.equal(
+            compBalance,
+            originalBalance,
+            'there is a mistmach between the balance withdrawed and the amount that has to be withdrawn',
+          );
+        });
+
+        it("should allow tutor to withdraw his available amount after a student recovery of funds", async () => {
+          
+          await instance.papaCreate(papaDesc,papaPrice,papa2Lessons,papaLock,papaStudent, { from: alice });
+          await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+          const preresult = await instance.fetchCourse.call(_papaCourse);
+          const originalBalance =  parseInt(preresult[7].toString(10),10)
+          await instance.papaAttendLesson(_papaCourse, { from: bob });
+          await instance.papaInitLesson(_papaCourse, { from: alice });
+          await instance.papaRecover(_papaCourse, { from: bob });
+          await instance.papaWithdraw(_papaCourse, { from: alice });
+          const result = await instance.fetchCourse.call(_papaCourse);
+          const newBalance =  parseInt(result[7].toString(10),10)
+          // defining the withdraw amount, wich is the total amount of lessons given, in this case one lesson
+          let withdrawValue =  lessonAmount * 1
+          let recoverValue = originalBalance - withdrawValue
+          let compBalance = newBalance + withdrawValue + recoverValue
+          
+  
+          assert.equal(
+            compBalance,
+            originalBalance,
+            'there is a mistmach between the balance withdrawed and the amount that has to be withdrawn',
+          );
+        });
+
+        it("should error if student tries to recover funds before termination of the timelock", async () => {
+          // we define a timelock of 1 minute
+          const newTimeLock = 1
+          await instance.papaCreate(papaDesc,papaPrice,papa2Lessons,newTimeLock,papaStudent, { from: alice });
+          await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
+          await instance.papaAttendLesson(_papaCourse, { from: bob });
+          await instance.papaInitLesson(_papaCourse, { from: alice });
+          await catchRevert(instance.papaRecover(_papaCourse, { from: bob }));
+        });
+      });
   });
+});
