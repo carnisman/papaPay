@@ -45,7 +45,7 @@ const tutorLesson = (props) => {
                   }}>
                   <li>You can give the lesson after the student attends it. To attend the lesson the student must clic the <i>Take lesson</i> button</li>
                   <li>You can withdraw your available balance after giving a lesson. To give a lesson you must clic the <i>Give Lesson</i> button</li>
-                  <li>The can withdraw every time you give a lesson or multiple lessons given</li>
+                  <li>You can withdraw per every lesson given or, if you want, withdraw multiple lessons given at once</li>
                   <li>If any button is disabled, please review this checklist</li>
                   </div>
         </h3>
