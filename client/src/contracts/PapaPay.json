@@ -190,7 +190,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -264,7 +265,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -310,7 +312,8 @@
       "name": "papaApprove",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -32552,15 +32555,22 @@
       "address": "0x8Ddd4f12A2F6EA9536c5773914904E7D1d5C6699",
       "transactionHash": "0x7042e5cbbdbe4db2e76411babf936141d0a185f7efa66257042b0759cf917724"
     },
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0xb95ce39a201839E0Ef854Bf345ba8D82e607f4C6",
+      "transactionHash": "0xb777c0bfe182ecfd3917a0e854c37b964de80b0e57ad406759503cb897a1a26b"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xe0ABB8ba2009bEE1C3Aa2B251188986435b8cDbA",
-      "transactionHash": "0xdae403354fc99564d919132783e2cfdc5fa2bbf684436bda130d55bec2a82812"
+      "address": "0x520fC0B807c082CDd53229d2FE4E1A3BDb1C95A3",
+      "transactionHash": "0x121afabfebc662837311c0e0a66f1c6c5ce3f1fffc7b9f2336e3399b53b2ca9d"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-27T20:13:31.082Z",
+  "updatedAt": "2021-11-27T22:10:05.177Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
