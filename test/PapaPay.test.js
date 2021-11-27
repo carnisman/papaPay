@@ -6,8 +6,6 @@ const { papas: PapaStruct, isDefined, isPayable, isType } = require('./ast-helpe
 contract("PapaPay", function (accounts) {
     const [alice, bob] = accounts;
     const emptyAddress = "0x0000000000000000000000000000000000000000";
-  
-    const price = "1000";
     const excessAmount = "2000";
     const lessAmount = "500";
     const _papaCourse=0

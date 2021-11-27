@@ -144,7 +144,7 @@ contract PapaPay is ReentrancyGuard {
 
 /// This modifier checks that the amount of given lessons isn´t equal to withdraws
     modifier tutorCanWithdraw(uint _papaCourse){
-        require(papas[_papaCourse].papaTutorSign != papas[_papaCourse].papaWithdrew,"Already withdrawn your available balance");
+        require(papas[_papaCourse].papaTutorSign > papas[_papaCourse].papaWithdrew,"Already withdrawn your available balance");
         _;
     }
 
