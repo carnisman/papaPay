@@ -8,12 +8,13 @@ https://papapay.ordinar.io
 
 ### Prerequisites
 
+#### Things that need to be installed before running anything:
 - Node.js >= v14
-- Truffle and Ganache
+- Ganache
 
 ### Contracts
 
-- Run `npm install` in project root to install Truffle, hdwallet, dotenv and OpenZeppelin ReentrancyGuard
+- Run `npm install` in project root. This will install Truffle, hdwallet, dotenv and OpenZeppelin ReentrancyGuard among others dependencies
 - Run Ganache in port `7545` and network id `1337`
 - To test the contract, edit `./contracts/PapaPay.sol`, uncomment lines 293 to 310 (fetchCourse function), save changes, and from project´s root directory run `truffle test`
 - To deploy the contract locally, after re-commenting lines 293 to 310, run `truffle migrate --network development`
