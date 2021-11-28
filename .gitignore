@@ -2,20 +2,20 @@
 node_modules
 package-lock.json
 *.code-workspace
-\client\node_modules
-\client\package-lock.json
-\client\*.code-workspace
-\client\build
-\client\src\contracts
+/client/node_modules
+/client/package-lock.json
+/client/*.code-workspace
+/client/build
+/client/src/contracts
 # misc
 .DS_Store
 .env
-\client\.DS_Store
-\client\.env
+/client/.DS_Store
+/client/.env
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-\client\npm-debug.log*
-\client\yarn-debug.log*
-\client\yarn-error.log*
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
