@@ -45,7 +45,7 @@ This aims to solve the exchange of value when a tutor and a student engage in a 
 
 ## Example workflow
 
-# Tutor - Creating course
+#### Tutor - Creating course
 1. Enter PapaPay website
 2. Select tutor
 3. Clic on Create Course
