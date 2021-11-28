@@ -22,17 +22,17 @@ class App extends Component  {
       myNetwork: "0x3",
       papaCount: 0,
       papas: [],
+      ethAccAddr: '',
+      papaAddress: 'Loading...',
       loading: true,
       connected: false,
       papapay: null,
-      papaAddress: 'Loading...',
       receiptTx: [],
       errorMsg: null,
       // executed codes --> 0: no execution / 1: waiting execution / 2: successfull execution / 3: error
       crExe: 0,
       tuExe: 0,
       stExe: 0,
-      ethAccAddr: ''
     }
     this.ethAccount = this.ethAccount.bind(this)
     this.isConnected = this.isConnected.bind(this)
@@ -57,22 +57,22 @@ class App extends Component  {
       this.setState({ papaAddress:'' })
       this.setState({ ethAccAddr: '' })
     }
-  }
+  };
 
   ethAccount = (y) => {
     this.setState({ ethAccAddr: y })
-  }
+  };
 
   cleanExe = () => {
     this.setState({ crExe: 0 })
     this.setState({ tuExe: 0 })
     this.setState({ stExe: 0 })
-  }
+  };
 
   cleanBlockchainData = () => {
     this.setState({ papapay:null })
     this.setState({ papas:[] })
-  }
+  };
 
   blockchainData = async () => {
     const web3 = new Web3(window.ethereum)
@@ -85,7 +85,6 @@ class App extends Component  {
           const networkData = PapaPay.networks[chainId]
 
           if(networkData) {
-
             const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
             this.setState({ papapay })
             const papaCount = await papapay.methods
@@ -117,13 +116,11 @@ class App extends Component  {
               this.setState({ tuExe: 3 })
               this.setState({ stExe: 3 })
       }
-
     } else {
       
       alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
     } 
-
-  }
+  };
 
   async papaCreate(_papaDesc, _papaPrice, _papaLessons, _papaLock, _papaStudent) {
     this.setState({ crExe: 1 })

@@ -10,7 +10,8 @@ https://papapay.ordinar.io
 
 #### Things that need to be installed before running anything:
 - Node.js >= v14
-- Ganache
+- Ganache UI
+- Clone this repo! :)
 
 ### Contracts
 
