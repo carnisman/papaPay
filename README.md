@@ -53,21 +53,21 @@ This aims to solve the exchange of value when a tutor and a student engage in a 
 5. Clic on Create Course
 6. See tx status under Create Course button
 
-# Student - Approving course and taking first lesson
+#### Student - Approving course and taking first lesson
 1. Enter PapaPay website
 2. Select student (Remember to use the student address declared earlier)
 3. Read the on-screen sugestions, look out for your course and clic on Approve Course. You need to have sufficient ETH balance in your wallet for this to work
 4. Then, attend your first lesson by clicking on Take Lesson
 5. Always see tx status on bottom of the page
 
-# Teacher - Giving class and withdrawing
+#### Teacher - Giving class and withdrawing
 1. Enter PapaPay website
 2. Select tutor, then select Give a Lesson
 3. Look out for your course and clic on Give Lesson. 
 4. After a successful transaction, you can clic on Withdraw, if tx is successful, check your new balance in your wallet, and the new balance on the course
 5. Always see tx status on bottom of the page
 
-# Student - Recovering balance
+#### Student - Recovering balance
 1. Enter PapaPay website
 2. Select student (Remember to use the student address declared earlier)
 3. Read the on-screen sugestions, look out for your course and clic on Recover Balance
