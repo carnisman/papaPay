@@ -29,7 +29,7 @@ const PapaWeb = () => {
                     padding: "1rem 0",
                     textAlign: "justify"
                   }}>
-                  <li>A tutor and a student can arrange on a course, composed of a series of lessons</li>
+                  <li>A tutor and a student can arrange on a course, composed of a series of lessons (This happens outside PapaPay)</li>
                   <li>Then, the tutor can <i>Create a course</i>, with all the details as price, lessons, timelock period for balance recovery, etc. Check the tutor´s create course page to see all the options</li>
                   <li>After that, the student can review those details, and approve that course. Then the total price of the course will be withdrawed of his wallet and stored on the course balance</li>
                   <li>To start a lesson, the student always need to attend the lesson first, clicking on the <i>Take lesson</i> button</li>
