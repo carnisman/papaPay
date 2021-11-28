@@ -18,7 +18,7 @@ class App extends Component  {
   constructor(props) {
     super(props)
     this.state = {
-      // Change the value of myNetwork value to your preferred network
+      // Change the value of myNetwork to your preferred network
       myNetwork: "0x3",
       papaCount: 0,
       papas: [],
@@ -46,14 +46,14 @@ class App extends Component  {
     this.papaRecover = this.papaRecover.bind(this)
   }
 
+  // this detects the web3-react "active" state, if true stars loading contract, if not, clean all states
   isConnected = (x) => {
     this.setState({connected:x})
     if(x) {
       this.blockchainData();
 
     } else { 
-      this.setState({ papapay:null })
-      this.setState({ papas:[] })
+      this.cleanBlockchainData()
       this.setState({ papaAddress:'' })
       this.setState({ ethAccAddr: '' })
     }
@@ -139,8 +139,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ crExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
@@ -160,8 +159,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ stExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
@@ -181,8 +179,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ tuExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
@@ -202,8 +199,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ stExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
@@ -223,8 +219,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ tuExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })
@@ -244,8 +239,7 @@ class App extends Component  {
         this.setState({ errorMsg: null })
         this.setState({ loading: false })
         this.setState({ stExe: 2 })
-        this.setState({ papapay:null })
-        this.setState({ papas:[] })
+        this.cleanBlockchainData()
       })
       .on('error', (error) => {
         this.setState({ errorMsg: error.message })

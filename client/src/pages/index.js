@@ -35,7 +35,7 @@ const PapaWeb = () => {
                   <li>To start a lesson, the student always need to attend the lesson first, clicking on the <i>Take lesson</i> button</li>
                   <li>Now, the tutor can give the lesson clicking on the <i>Give lesson</i> button</li>
                   <li>The tutor can start withdrawing balance from the course after it´s first lesson. The amount to be withdrawn is equivalent to the lessons given</li>
-                  <li>The student can recover it´s remaining or total balance if the tutor doesn´t give a lesson after the timelock period has passed</li>
+                  <li>The student can recover it´s remaining or total balance if the tutor doesn´t give a lesson after the timelock period</li>
                   </div>
         </h3>
         <div
