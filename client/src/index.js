@@ -82,7 +82,6 @@ class App extends Component  {
           await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: this.state.myNetwork }], });
         
           const chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
-          console.log(chainId)
           const networkData = PapaPay.networks[chainId]
 
           if(networkData) {
