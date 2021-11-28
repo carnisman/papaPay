@@ -36,22 +36,21 @@ https://
 
 ## Project description
 
-User and apartment owner enter an agreement for renting a property, i.e. exchanging usage rights to an apartment for as long as payments are made to a specific Ethereum account before the agreed deadline.
-
-User receives a keycode / access token to the apartment after first payment. If a user's payments are late, they will receive a reminder after one week. After e.g. 30 days (variable depending on local jurisdiction) of no payments, usage rights will be automatically transferred back to owner and apartment access rights will be revoked from user. User agrees to this procedure when entering contract with owner.
-
-- Checking for received payments and transferring ownership back to owner on non-payment cases could be scheduled with e.g. Gelato Network (https://docs.gelato.network/tutorial).
-- Opening door locks could be done with an app with smart locks, e.g. https://api.getkisi.com/docs. Smart lock APIs won't be explored in this project.
+This aims to solve the exchange of value when a tutor and a student engage in a one-on-one lesson, specially when both resides in different countries. 
+- Both parts meet to arrange an economic value and other requirements for the course wich is composed by one or more lessons. 
+- When they agree, the tutor creates a course and names it, declares the price of the entire course, the lessons quantity, a timelock wich allows the student to recover it´s assets after a period of time if the tutor doesn´t give the promised class, and, of course, the student address. 
+- The student then reviews that, and if agrees, approves the course, deducting the course value from the student´s wallet and storing it in the contract. 
+- When the student attends to a lesson, it signs a attendance counter, that allows the tutor to give the lesson (signing a init lesson counter) and therefore allowing the tutor to withdraw a fraction of the balance stored in the contract corresponding to the given lessons
+- If a tutor doesn´t start a lesson after a student gives it´s attendance, or, the student never attend any lesson, the student can recover the balance left in the contract after the timelock period specified in the course creation
 
 ## Example workflow
 
-1. Enter service web site
-2. Login with Metamask
-3. Browse apartments
-4. Select apartment
-5. Agree on contract, pay first installment with Metamask (smart contract call)
-6. Tenantship is transferred to user account (smart contract call)
-7. Receive key phrase / token / OTP / etc. to access apartment with smart lock app (this part will be mocked in project)
+1. Enter PapaPay website
+2. Select if your´re a tutor or student (For this example we´ll create a course) We select tutor
+3. Clic on Create Course
+4. Follow the on-screen instructions and fill all the fields
+5. 
+
 
 
 ## Directory structure
