@@ -94,3 +94,11 @@ ROPSTEN_MNEMONIC=
 - Stop using block.timestamp and use Chainlink Keepers
 - Improve gas consumption
 - Improve React code, implement a place where students and tutors can pre-arrange a course
+
+## Thanks to
+
+#### Yamenk and other friends who helped me
+#### Nana who always gives me good vibes
+#### JYMS for the future
+#### The beautiful team of Consensys, the new friends in the cohort, the mentors, and all the people who invest time in spreading the word of web3
+#### zombo.com for everything else
