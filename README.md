@@ -1,4 +1,4 @@
-# Final project - PapaPay - A web3 payment system between tutor and students
+# Final project - PapaPay - A web3 payment system between tutors and students
 
 ## Deployed version url:
 
