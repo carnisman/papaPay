@@ -38,8 +38,10 @@ const papaCreate = (props) => {
                     textAlign: "justify"
                   }}>
                   <li>All fields must be filled</li>
-                  <li>You cannot enroll yourself as a student</li>
+                  <li>Put a good description :)</li>
                   <li>The price and lessons quantity cannot be 0</li>
+                  <li>The timelock can be 0 if you want not to have one. If you set a timelock, the student can recover it´s balance after that period</li>
+                  <li>You cannot enroll yourself as a student</li>
                   <li>You must enter a valid ethereum address</li>
                   <li>If the <i>Create Course</i> button is disabled, please review this checklist</li>
                   </div>
