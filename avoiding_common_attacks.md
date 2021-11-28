@@ -1,5 +1,9 @@
 # Avoiding common attacks
 
+## SWC-101 (Integer Overflow and Underflow)
+
+We use compiler pragma `0.8.10` because starting with solidity 0.8 the compiler has built in overflow checking.
+
 ## SWC-103 (Floating pragma)
 
 We use compiler pragma `0.8.10` to avoid using outdated compiler versions who can have bugs that affect the contract system negatively 
