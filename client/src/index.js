@@ -86,7 +86,7 @@ class App extends Component  {
           const networkData = PapaPay.networks[chainId]
 
           if(networkData) {
-            this.cleanExe()
+
             const papapay = new web3.eth.Contract(PapaPay.abi, networkData.address)
             this.setState({ papapay })
             const papaCount = await papapay.methods
