@@ -43,7 +43,7 @@ This aims to solve the exchange of value when a tutor and a student engage in a 
 - When the student attends to a lesson, it signs a attendance counter, that allows the tutor to give the lesson (signing a init lesson counter) and therefore allowing the tutor to withdraw a fraction of the balance stored in the contract corresponding to the given lessons
 - If a tutor doesn´t start a lesson after a student gives it´s attendance, or, the student never attend any lesson, the student can recover the balance left in the contract after the timelock period specified in the course creation
 
-## Example workflow
+## Example workflows
 
 #### Tutor - Creating course
 1. Enter PapaPay website
