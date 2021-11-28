@@ -60,7 +60,7 @@ This aims to solve the exchange of value when a tutor and a student engage in a 
 4. Then, attend your first lesson by clicking on Take Lesson
 5. Always see tx status on bottom of the page
 
-#### Teacher - Giving class and withdrawing
+#### Teacher - Giving lesson and withdrawing
 1. Enter PapaPay website
 2. Select tutor, then select Give a Lesson
 3. Look out for your course and clic on Give Lesson. 
