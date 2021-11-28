@@ -21,6 +21,8 @@ contract("PapaPay", function (accounts) {
       instance = await PapaPay.new();
     });
   
+    // We test a succesful deployment checking that the contract creation doesn´t return a empty address
+
     describe('Deployment', async () => {
         it("Deploys successfully", async () => {
             const address = await PapaPay.address
@@ -32,6 +34,8 @@ contract("PapaPay", function (accounts) {
     })
 
     describe("Variables", () => {
+
+      // Basic variable and type checking
   
       it("should have an papaCount (Course counter)", async () => {
         assert.equal(typeof instance.papaCount, 'function', "the contract has no papaCount");
@@ -186,6 +190,7 @@ contract("PapaPay", function (accounts) {
 
       describe("Course creation tests", () => {
 
+      // Tests course creation
 
       it("Should add a course with its parameters", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -229,6 +234,8 @@ contract("PapaPay", function (accounts) {
         );
       });
 
+      // Test emission of event
+
       it("should emit a CourseCreated event when an course is added", async () => {
         let eventEmitted = false;
         const tx = await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -243,6 +250,8 @@ contract("PapaPay", function (accounts) {
           "adding an course should emit a CourseCreated event",
         );
       });
+
+      // Testing requires and reverts
 
       it("should error when tutor and student are the same", async () => {
         await catchRevert(instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,alice, { from: alice }));
@@ -264,6 +273,7 @@ contract("PapaPay", function (accounts) {
 
     describe("Course approval tests", () => {
 
+      // Basic approval test, we check if the balance updates
   
       it("should allow the student to approve a course and update balance accordingly", async () => {
 
@@ -280,6 +290,8 @@ contract("PapaPay", function (accounts) {
 
       });
 
+      // Test emission of events
+
       it("should emit CourseDeposit event when course is approved", async () => {
         var eventEmitted = false;
         
@@ -293,6 +305,8 @@ contract("PapaPay", function (accounts) {
         assert.equal(eventEmitted, true, "approving course should emit CourseDeposit");
       });
       
+      // Testing requires and reverts
+
       it("should error when a tutor tries to approve course", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
         await catchRevert(instance.papaApprove(_papaCourse, { from: alice, value:papaPrice }));
@@ -314,6 +328,8 @@ contract("PapaPay", function (accounts) {
 
       /// Student side
 
+      // Test student assistance to a course, an attendance variable should increase
+
       it("should allow the student to attend a lesson and update student attendance counter", async () => {
 
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -330,6 +346,8 @@ contract("PapaPay", function (accounts) {
 
       });
 
+      // Test emission of events
+
       it("should emit LessonAttended event when lesson is attended", async () => {
         var eventEmitted = false;
         
@@ -344,6 +362,8 @@ contract("PapaPay", function (accounts) {
         assert.equal(eventEmitted, true, "attending lesson should emit LessonAttended");
       });
     
+      // Testing requires and reverts
+
       it("should error when a tutor tries to attend lesson", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
         await instance.papaApprove(_papaCourse, { from: bob, value:papaPrice });
@@ -362,6 +382,8 @@ contract("PapaPay", function (accounts) {
     describe("Lesson init tests", () => {
       /// Tutor side
 
+      // Test tutor giving a course, an init lesson variable should increase
+
       it("should allow the tutor to init a lessons and update tutor init counter", async () => {
 
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -379,6 +401,8 @@ contract("PapaPay", function (accounts) {
 
       });
 
+      // Test emission of events
+
       it("should emit LessonStarted event when lessons is started", async () => {
         var eventEmitted = false;
         
@@ -393,6 +417,8 @@ contract("PapaPay", function (accounts) {
   
         assert.equal(eventEmitted, true, "initializing lessons should emit LessonStarted");
       }); 
+
+      // Testing requires and reverts
 
       it("should error when a tutor tries to init lessons without a student attending it", async () => {
         await instance.papaCreate(papaDesc,papaPrice,papaLessons,papaLock,papaStudent, { from: alice });
@@ -425,14 +451,16 @@ contract("PapaPay", function (accounts) {
         await catchRevert(instance.papaAttendLesson(_papaCourse, { from: bob }));
       });
 
-
     });
+
       /// Course withdrawal and recovery tests
       describe("Withdrawal and recovery tests", () => {
         /// we are increasing the amount to two lessons
         const papa2Lessons = 2
-        /// defining the individual lesson value
+        /// we define the individual lesson value
         const lessonAmount = papaPrice / papa2Lessons
+
+        /// testing withdrawal, we check the balance withdrawed and tht amount that has to be withdrawn
 
         it("should allow tutor to withdraw the equivalent to one lesson after that lesson is given", async () => {
           
@@ -456,6 +484,8 @@ contract("PapaPay", function (accounts) {
             'there is a mistmach between the balance withdrawed and the amount that has to be withdrawn',
           );
         });
+
+        /// the following test are explained by it´s titles
 
         it("should allow student to recover remaining balance without any lesson given", async () => {
           
