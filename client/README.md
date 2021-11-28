@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# Final project - PapaPay - A web3 payment system between tutor and students
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Deployed version url:
 
-## Available Scripts
+https://papapay.ordinar.io
 
-In the project directory, you can run:
+## How to run this project locally:
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Node.js >= v14
+- Truffle and Ganache
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Contracts
 
-### `npm test`
+- Run `npm install` in project root to install Truffle, hdwallet, dotenv and OpenZeppelin ReentrancyGuard
+- Run Ganache in port `7545` and network id `1337`
+- To test the contract run `truffle test`
+- To deploy the contract locally run `truffle migrate --network development`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Frontend
 
-### `npm run build`
+- Go to client directory `cd client`
+- Edit `./src/index.js` and change line 22, state variable `myNetwork` from `0x3` (That´s Ropsten chainId) to `0x539` (Ganache´s 1337 chainId)
+- Run `npm install` to install packages and dependencies
+- To start the server run `npm run start`
+- Open `http://localhost:3000`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Video link
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+https://
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Public Ethereum wallet for certification:
 
-### `npm run eject`
+`0x2fB6E185Dd70265D86298CAF775851262048e74C`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Project description
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This aims to solve the exchange of value when a tutor and a student engage in a one-on-one lesson, specially when both resides in different countries. 
+- Both parts meet to arrange an economic value and other requirements for the course wich is composed by one or more lessons. 
+- When they agree, the tutor creates a course and names it, declares the price of the entire course, the lessons quantity, a timelock wich allows the student to recover it´s assets after a period of time if the tutor doesn´t give the promised class, and, of course, the student address. 
+- The student then reviews that, and if agrees, approves the course, deducting the course value from the student´s wallet and storing it in the contract. 
+- When the student attends to a lesson, it signs a attendance counter, that allows the tutor to give the lesson (signing a init lesson counter) and therefore allowing the tutor to withdraw a fraction of the balance stored in the contract corresponding to the given lessons
+- If a tutor doesn´t start a lesson after a student gives it´s attendance, or, the student never attend any lesson, the student can recover the balance left in the contract after the timelock period specified in the course creation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Example workflow
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Tutor - Creating course
+1. Enter PapaPay website
+2. Select tutor
+3. Clic on Create Course
+4. Follow the on-screen instructions and fill all the fields (Use a student address under your control to test it later)
+5. Clic on Create Course
+6. See tx status under Create Course button
 
-## Learn More
+#### Student - Approving course and taking first lesson
+1. Enter PapaPay website
+2. Select student (Remember to use the student address declared earlier)
+3. Read the on-screen sugestions, look out for your course and clic on Approve Course. You need to have sufficient ETH balance in your wallet for this to work
+4. Then, attend your first lesson by clicking on Take Lesson
+5. Always see tx status on bottom of the page
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Teacher - Giving class and withdrawing
+1. Enter PapaPay website
+2. Select tutor, then select Give a Lesson
+3. Look out for your course and clic on Give Lesson. 
+4. After a successful transaction, you can clic on Withdraw, if tx is successful, check your new balance in your wallet, and the new balance on the course
+5. Always see tx status on bottom of the page
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Student - Recovering balance
+1. Enter PapaPay website
+2. Select student (Remember to use the student address declared earlier)
+3. Read the on-screen sugestions, look out for your course and clic on Recover Balance
+4. If the timestamp hasn´t passed, metamask will throw a revert. After the timelock, there will be a successful transaction, you can check your new balance in your wallet, and the new balance on the course
+5. Always see tx status on bottom of the page
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Directory structure
 
-### Analyzing the Bundle Size
+- `client`: React frontend.
+- `contracts`: Smart contracts.
+- `migrations`: Migration files for deploying contracts.
+- `test`: Unit tests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Environment variables (not needed for running project locally)
 
-### Making a Progressive Web App
+```
+ROPSTEN_INFURA_PROJECT_ID=
+ROPSTEN_MNEMONIC=
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## TODO features
 
-### Advanced Configuration
+- Stop using block.timestamp and use Chainlink Keepers
+- Improve gas consumption
+- Improve React code, implement a place where students and tutors can pre-arrange a course
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Thanks to
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### Yamenk and other friends who helped me
+#### Nana who always gives me good vibes
+#### JYMS for the future
+#### The beautiful team of Consensys, the new friends in the cohort, the mentors, and all the people who invest time in spreading the word of web3
+#### zombo.com for everything else
