@@ -13,17 +13,17 @@ https://papapay.ordinar.io
 - Ganache UI
 - Clone this repo! :)
 
-### Contract deployment
+### Contract deployment and testing
 
 - Run `npm install` in project´s root directory. This will install Truffle, hdwallet, dotenv and OpenZeppelin ReentrancyGuard among others dependencies
 - Run Ganache in port `7545` and network id `1337`
-- To test the contract, edit `./contracts/PapaPay.sol`, uncomment lines 293 to 310 (fetchCourse function), save changes, and from project´s root directory run `truffle test`
+- To test the contract, edit `./contracts/PapaPay.sol`, uncomment lines 293 to 310 (fetchCourse function), save changes, and from project´s root directory run `truffle test` 
 - To deploy the contract locally, after re-commenting lines 293 to 310, run `truffle migrate --network development --reset`
 
 ### Frontend deployment
 
 - Go to client directory `cd client`
-- Edit `./src/index.js` and change line 22, state variable `myNetwork` from `0x3` (That´s Ropsten chainId) to `0x539` (Ganache´s 1337 chainId)
+- If you want to use the previous locally deployed contract edit `./src/index.js` and change line 22, state variable `myNetwork` from `0x3` (That´s Ropsten chainId) to `0x539` (Ganache´s 1337 chainId).
 - Run `npm install` to install packages and dependencies
 - To start the server run `npm run start`
 - Open `http://localhost:3000`
