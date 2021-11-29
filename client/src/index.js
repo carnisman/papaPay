@@ -19,7 +19,7 @@ class App extends Component  {
     super(props)
     this.state = {
       // Change the value of myNetwork to your preferred network // 0x3 is for Ropsten // 0x539 if for Ganache -- rememember to set Network Id in Ganache to 1337 too
-      myChain: "0x539",
+      myChain: "0x3",
       papaCount: 0,
       papas: [],
       ethAccAddr: '',
