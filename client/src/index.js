@@ -18,8 +18,8 @@ class App extends Component  {
   constructor(props) {
     super(props)
     this.state = {
-      // Change the value of myNetwork to your preferred network
-      myNetwork: "0x3",
+      // Change the value of myNetwork to your preferred network // 0x3 is for Ropsten // 0x539 if for Ganache -- rememember to set Network Id in Ganache to 1337 too
+      myChain: "0x539",
       papaCount: 0,
       papas: [],
       ethAccAddr: '',
@@ -79,7 +79,7 @@ class App extends Component  {
     if (window.ethereum) {
       this.cleanBlockchainData()
       try {
-          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: this.state.myNetwork }], });
+          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: this.state.myChain }], });
         
           const chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }),16)
           const networkData = PapaPay.networks[chainId]
@@ -104,7 +104,7 @@ class App extends Component  {
           } 
           else {
               this.cleanBlockchainData()
-              this.setState({ errorMsg: "PapaPay isn´t deployed on this network, please, check MetaMask, use Ropsten or a local network accordingly" })
+              this.setState({ errorMsg: "PapaPay isn´t deployed on this network, please, check MetaMask, use Ropsten or a local network configured for network id 1337 accordingly" })
               this.setState({ crExe: 3 })
               this.setState({ tuExe: 3 })
               this.setState({ stExe: 3 })
@@ -261,7 +261,7 @@ class App extends Component  {
               papaAttendLesson={this.papaAttendLesson}
               papaWithdraw={this.papaWithdraw}
               papaRecover={this.papaRecover}
-              myNetwork={this.state.myNetwork}
+              myChain={this.state.myChain}
               papas={this.state.papas}
               papapay={this.state.papapay}
               papaAddress={this.state.papaAddress}

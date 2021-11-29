@@ -13,7 +13,7 @@ module.exports = {
     development: {
       host: "127.0.0.1",
       port: 7545,
-      network_id: 1337,
+      network_id: "1337",
     },
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${process.env.ROPSTEN_INFURA_PROJECT_ID}`),

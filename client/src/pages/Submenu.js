@@ -22,7 +22,7 @@ const Submenu = (props) => {
     if (active) {
       window.ethereum.on('chainChanged', async () => {
         const currentChain = await window.ethereum.request({ method: 'eth_chainId' })
-        if (currentChain != props.myNetwork) 
+        if (currentChain != props.myChain) 
         {
           await disconnect()
           window.location.reload()

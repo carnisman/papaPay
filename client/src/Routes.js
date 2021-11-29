@@ -18,7 +18,7 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
-              myNetwork={prop.myNetwork}
+              myChain={prop.myChain}
             />
             <PapaWeb/>
           </>} />
@@ -28,7 +28,7 @@ const Routes = (prop) => {
               isConnected={prop.isConnected}
               papaAddress={prop.papaAddress}
               ethAccount={prop.ethAccount}
-              myNetwork={prop.myNetwork}
+              myChain={prop.myChain}
             />
             <Tutor/>
           </>} />
@@ -38,7 +38,7 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            myNetwork={prop.myNetwork}
+            myChain={prop.myChain}
           />
           <CreateCourse
             papapay={prop.papapay}
@@ -57,7 +57,7 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            myNetwork={prop.myNetwork}
+            myChain={prop.myChain}
           />
           <TutorLesson
             papas={prop.papas}
@@ -77,7 +77,7 @@ const Routes = (prop) => {
             isConnected={prop.isConnected}
             papaAddress={prop.papaAddress}
             ethAccount={prop.ethAccount}
-            myNetwork={prop.myNetwork}
+            myChain={prop.myChain}
           />
           <StudentLesson
             papapay={prop.papapay}
