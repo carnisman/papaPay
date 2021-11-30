@@ -33,10 +33,14 @@ const Submenu = (props) => {
 
 
   async function connect() {
+    if (window.ethereum){
     try {
       setTimeout( async () => await activate(injected), 500)
     } catch (ex) {
       console.log(ex)
+    }
+    }else {
+      window.alert("Please install MetaMask extension in your browser")
     }
   }
 
