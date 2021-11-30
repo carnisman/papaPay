@@ -31,7 +31,7 @@ https://papapay.ordinar.io
 
 ## Video link
 
-https://
+https://www.loom.com/share/6b82735180be439b9df677f52f145d8b
 
 ## Public Ethereum wallet for certification:
 
